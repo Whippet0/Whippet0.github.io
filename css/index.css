@@ -2201,12 +2201,12 @@ kbd {
   font-size: 0.9em;
   color: #999;
 }
-@media (min-width: 1138px) {
+@media (min-width: 1270px) {
   .header-nav-inner {
-    width: 1138px;
+    width: 1270px;
   }
   .main-inner {
-    width: 1138px;
+    width: 1270px;
   }
 }
 @media (min-width: 991.98px) {
