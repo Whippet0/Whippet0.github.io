@@ -664,7 +664,7 @@ kbd {
   font-size: 16px;
 }
 .content-wrap {
-  width: calc(100% - 330px);
+  width: calc(100% - 350px);
   float: left;
 }
 .content-wrap--noside {
@@ -2201,12 +2201,12 @@ kbd {
   font-size: 0.9em;
   color: #999;
 }
-@media (min-width: 1270px) {
+@media (min-width: 1390px) {
   .header-nav-inner {
-    width: 1270px;
+    width: 1390px;
   }
   .main-inner {
-    width: 1270px;
+    width: 1390px;
   }
 }
 @media (min-width: 991.98px) {
