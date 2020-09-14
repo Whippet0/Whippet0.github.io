@@ -1,9 +1,9 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/favicon-16x16.png?v=2.1.1" type="image/png" sizes="16x16"><link rel="icon" href="/images/favicon-32x32.png?v=2.1.1" type="image/png" sizes="32x32"><meta name="description" content="搭建博客                     环境搭建                            安装 Git &amp;&amp; Node.js        Git Node.js">
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/favicon-16x16.png?v=2.1.1" type="image/png" sizes="16x16"><link rel="icon" href="/images/favicon-32x32.png?v=2.1.1" type="image/png" sizes="32x32"><meta name="description" content="搭建博客                           环境搭建                           安装 Git &amp;&amp; Node.js       GitNode.js">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hexo搭建个人博客">
 <meta property="og:url" content="http://yoursite.com/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/index.html">
 <meta property="og:site_name" content="Whippet&#39;s Blog">
-<meta property="og:description" content="搭建博客                     环境搭建                            安装 Git &amp;&amp; Node.js        Git Node.js">
+<meta property="og:description" content="搭建博客                           环境搭建                           安装 Git &amp;&amp; Node.js       GitNode.js">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://yoursite.com/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/20200816005249.png">
 <meta property="og:image" content="http://yoursite.com/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/20200816142402.png">
@@ -14,7 +14,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/20200816161028.png">
 <meta property="og:image" content="http://yoursite.com/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/20200816212419.png">
 <meta property="article:published_time" content="2020-08-15T15:54:00.000Z">
-<meta property="article:modified_time" content="2020-09-14T03:00:57.572Z">
+<meta property="article:modified_time" content="2020-09-14T03:01:23.938Z">
 <meta property="article:author" content="whippet">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/20200816005249.png"><title>Hexo搭建个人博客 | Whippet's Blog</title><link ref="canonical" href="http://yoursite.com/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.1.1"><script>var Stun = window.Stun || {};
@@ -40,127 +40,96 @@ var CONFIG = {
   sourcePath: {"js":"js","css":"css","images":"images"},
 };
 
-window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.1.1"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/friendship/"><span class="header-nav-menu-item__icon"><i class="fas fa-link"></i></span><span class="header-nav-menu-item__text">友链</span></a></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Whippet's Blog</div><div class="header-banner-info__subtitle"></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">Hexo搭建个人博客</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2020-08-15</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2020-09-14</span></span></div></header><div class="post-body"><h1>搭建博客</h1>
-
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.1.1"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/friendship/"><span class="header-nav-menu-item__icon"><i class="fas fa-link"></i></span><span class="header-nav-menu-item__text">友链</span></a></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Whippet's Blog</div><div class="header-banner-info__subtitle"></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">Hexo搭建个人博客</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2020-08-15</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2020-09-14</span></span></div></header><div class="post-body"><h1 id="搭建博客">
+          <a href="#搭建博客" class="heading-link"><i class="fas fa-link"></i></a>搭建博客</h1>
+      
         <h2 id="环境搭建">
           <a href="#环境搭建" class="heading-link"><i class="fas fa-link"></i></a>环境搭建</h2>
       
-
-        <h3 id="安装-Git-Node-js">
-          <a href="#安装-Git-Node-js" class="heading-link"><i class="fas fa-link"></i></a>安装 Git &amp;&amp; Node.js</h3>
-      
-<p><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://git-scm.com/download/win">Git</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>
-<span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://nodejs.org/zh-cn/download/">Node.js</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+        <h3 id="安装-Git-amp-amp-Node-js">
+          <a href="#安装-Git-amp-amp-Node-js" class="heading-link"><i class="fas fa-link"></i></a>安装 Git &amp;&amp; Node.js</h3>
+      <p><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://git-scm.com/download/win">Git</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://nodejs.org/zh-cn/download/">Node.js</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>  </p>
 <a id="more"></a>
-<p><img src="/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/20200816005249.png" alt=""></p>
+
+<p><img src="/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/20200816005249.png"></p>
 
         <h3 id="安装-Hexo">
           <a href="#安装-Hexo" class="heading-link"><i class="fas fa-link"></i></a>安装 Hexo</h3>
-      
-<p>Git 和 Node.js 安装好之后，首先创建一个用于存放博客文件的文件夹，进入文件夹后，安装并使用 Hexo 。</p>
+      <p>Git 和 Node.js 安装好之后，首先创建一个用于存放博客文件的文件夹，进入文件夹后，安装并使用 Hexo 。  </p>
 <figure class="highlight shell"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install -g hexo-cli</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> hexo init</span></span><br></pre></td></tr></tbody></table></div></figure>
 <p>安装完成之后，文件夹的目录如下：</p>
 <blockquote>
-<p>|——node_modules<br>
-|——public<br>
-|——scaffolds<br>
-|——source<br>
-|——themes<br>
-|——_config.yml<br>
-|——.gitignore<br>
-|——db.json<br>
-|——package.json<br>
-|——package-lock.json</p>
+<p>|——node_modules<br>|——public<br>|——scaffolds<br>|——source<br>|——themes<br>|——_config.yml<br>|——.gitignore<br>|——db.json<br>|——package.json<br>|——package-lock.json</p>
 </blockquote>
 
         <h3 id="生成静态博客文件">
           <a href="#生成静态博客文件" class="heading-link"><i class="fas fa-link"></i></a>生成静态博客文件</h3>
-      
-<p>在 Git Bash 终端执行命令：</p>
+      <p>在 Git Bash 终端执行命令：</p>
 <figure class="highlight shell"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> hexo g <span class="comment"># 生成</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> hexo s <span class="comment"># 启动服务</span></span></span><br></pre></td></tr></tbody></table></div></figure>
-<p>在浏览器中访问 <span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000/</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>
-<img src="/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/20200816142402.png" alt=""></p>
+<p>在浏览器中访问 <span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000/</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br><img src="/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/20200816142402.png"></p>
 
         <h2 id="将博客部署到-Github-上">
           <a href="#将博客部署到-Github-上" class="heading-link"><i class="fas fa-link"></i></a>将博客部署到 Github 上</h2>
       
-
         <h3 id="创建仓库">
           <a href="#创建仓库" class="heading-link"><i class="fas fa-link"></i></a>创建仓库</h3>
-      
-<p>创建一个名为你用户名.github.io的仓库，(必须是用户名，其他名称无效),以后的访问地址就是 <span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="http://xn--eqr924avxo.github.io">http://用户名.github.io</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>
-<img src="/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/20200816143821.png" alt=""></p>
+      <p>创建一个名为你用户名.github.io的仓库，(必须是用户名，其他名称无效),以后的访问地址就是 http://用户名.github.io<br><img src="/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/20200816143821.png"></p>
 
         <h3 id="配置-SSH-密钥">
           <a href="#配置-SSH-密钥" class="heading-link"><i class="fas fa-link"></i></a>配置 SSH 密钥</h3>
-      
-<p>查看本机是否存在 .ssh 目录</p>
+      <p>查看本机是否存在 .ssh 目录</p>
 <figure class="highlight shell"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> ~/.ssh</span></span><br></pre></td></tr></tbody></table></div></figure>
-<p>如果不存在，则创建一对新的 SSH 密钥</p>
+
+<p>如果不存在，则创建一对新的 SSH 密钥 </p>
 <figure class="highlight shell"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">ssh-keygen -t rsa -C <span class="string">"your_email@example.com"</span> <span class="comment"># 这将按照你提供的邮箱地址，创建一对密钥</span></span></span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/c/Users/you/.ssh/id_rsa): [Press enter]</span><br></pre></td></tr></tbody></table></div></figure>
 <p>根据提示到输入密码和确认密码</p>
 <figure class="highlight shell"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Enter passphrase (empty for no passphrase): [Type a passphrase]</span><br><span class="line">Enter same passphrase again: [Type passphrase again]</span><br></pre></td></tr></tbody></table></div></figure>
-<p>生成 SSH 之后 运行如下命令，将公钥的内容复制到系统粘贴板(clipboard)中：</p>
+<p>生成 SSH 之后 运行如下命令，将公钥的内容复制到系统粘贴板(clipboard)中：  </p>
 <figure class="highlight shell"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clip &lt; ~/.ssh/id_rsa.pub</span><br></pre></td></tr></tbody></table></div></figure>
-<p>粘贴公钥到 github --&gt; Settings --&gt; SSH keys<br>
-<img src="/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/20200816145440.png" alt=""></p>
+<p>粘贴公钥到 github –&gt; Settings –&gt; SSH keys<br><img src="/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/20200816145440.png"></p>
 <p>进行测试，看是否设置成功</p>
 <figure class="highlight shell"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ssh -T git@github.com</span></span><br></pre></td></tr></tbody></table></div></figure>
-<p><img src="/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/20200816145840.png" alt=""></p>
+<p><img src="/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/20200816145840.png"></p>
 
         <h3 id="设置用户信息">
           <a href="#设置用户信息" class="heading-link"><i class="fas fa-link"></i></a>设置用户信息</h3>
-      
-<p>Git 会根据用户的名字和邮箱来记录提交，GitHub也是用这些信息来做权限的处理，输入下面的代码进行个人信息的设置，把名称和邮箱替。</p>
+      <p>Git 会根据用户的名字和邮箱来记录提交，GitHub也是用这些信息来做权限的处理，输入下面的代码进行个人信息的设置，把名称和邮箱替。</p>
 <figure class="highlight shell"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git config --global user.name <span class="string">"Whippet"</span>             <span class="comment">#用户名</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git config --global user.email  <span class="string">"Whippet0@qq.com"</span> <span class="comment">#邮箱</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git config --list                                  <span class="comment">#查看用户信息</span></span></span><br></pre></td></tr></tbody></table></div></figure>
+
 
         <h3 id="本地的-Hexo-文件-更新到-Github">
           <a href="#本地的-Hexo-文件-更新到-Github" class="heading-link"><i class="fas fa-link"></i></a>本地的 Hexo 文件 更新到 Github</h3>
-      
-<p>登陆 Github  找到地址<br>
-<span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://github.com/Whippet0/Whippet0.github.io.git">https://github.com/Whippet0/Whippet0.github.io.git</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>
-<img src="/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/20200816150613.png" alt=""></p>
-<p>复制至 hexo 安装目录下的 _config.yml  文件中</p>
+      <p>登陆 Github  找到地址<br><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://github.com/Whippet0/Whippet0.github.io.git">https://github.com/Whippet0/Whippet0.github.io.git</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br><img src="/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/20200816150613.png"></p>
+<p>复制至 hexo 安装目录下的 _config.yml  文件中  </p>
 <figure class="highlight yml"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/deployment.html</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">https://github.com/Whippet0/Whippet0.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">master</span></span><br></pre></td></tr></tbody></table></div></figure>
-<p>在 hexo 文件夹下执行</p>
+
+<p>在 hexo 文件夹下执行 </p>
 <figure class="highlight shell"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> hexo g</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> hexo d</span></span><br><span class="line">或者</span><br><span class="line"><span class="meta">$</span><span class="bash"> hexo g -d </span></span><br></pre></td></tr></tbody></table></div></figure>
-<p>如果  hexo d 的时候报错 ERROR Deployer not found: git<br>
-执行 <code>npm install hexo-deployer-git --save </code></p>
-<p>然后需要输入 github 的账号和密码</p>
-<p>成功之后访问 <span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://whippet0.github.io/">https://whippet0.github.io/</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>
-<img src="/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/20200816161028.png" alt=""></p>
+<p>如果  hexo d 的时候报错 ERROR Deployer not found: git<br>执行 <code>npm install hexo-deployer-git --save </code>  </p>
+<p>然后需要输入 github 的账号和密码    </p>
+<p>成功之后访问 <span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://whippet0.github.io/">https://whippet0.github.io/</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br><img src="/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/20200816161028.png"></p>
 
         <h2 id="美化博客">
           <a href="#美化博客" class="heading-link"><i class="fas fa-link"></i></a>美化博客</h2>
-      
-<p>进入 <span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://hexo.io/themes/">hexo 主题官网</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>
-挑选我们喜欢的主题，复制主题的地址<br>
-<code>https://github.com/Molunerfinn/hexo-theme-melody</code><br>
-打开Hexo文件夹 按照 github 上的提示进行操作 若没有提示则直接 <code>git clone</code> 该文件夹。<br>
-下载完成后，打开Hexo文件夹下的配置文件_config.yml</p>
+      <p>进入 <span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://hexo.io/themes/">hexo 主题官网</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>挑选我们喜欢的主题，复制主题的地址<br><code>https://github.com/Molunerfinn/hexo-theme-melody</code><br>打开Hexo文件夹 按照 github 上的提示进行操作 若没有提示则直接 <code>git clone</code> 该文件夹。<br>下载完成后，打开Hexo文件夹下的配置文件_config.yml  </p>
 <p>修改参数为：<code>theme: melody</code></p>
 <p>在 Git Bash 终端执行命令：</p>
 <figure class="highlight shell"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> hexo g <span class="comment"># 生成</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> hexo s <span class="comment"># 启动服务</span></span></span><br></pre></td></tr></tbody></table></div></figure>
-<p>在浏览器中访问 <span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000/</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>
-在本地进行查看</p>
-<p>部署主题到github 上</p>
+<p>在浏览器中访问 <span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000/</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>在本地进行查看</p>
+<p>部署主题到github 上  </p>
 <figure class="highlight shell"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo clean   (必须要，不然有时因为缓存问题，服务器更新不了主题)</span><br><span class="line">hexo g -d</span><br></pre></td></tr></tbody></table></div></figure>
-<p><img src="/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/20200816212419.png" alt=""></p>
+<p><img src="/2020/08/15/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/20200816212419.png"></p>
 <p>最后我选择了这个主题 <span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://liuyib.github.io/hexo-theme-stun/zh-CN/">stun</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> 因为有配套的中文说明，所以配置起来很方便。</p>
 <p>同时也可以让博客上添加一些 Emoji <span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://www.webfx.com/tools/emoji-cheat-sheet/"><span class="github-emoji" style="color: transparent;background:no-repeat url(https://github.githubassets.com/images/icons/emoji/unicode/1f474.png?v8) center/contain" data-src="https://github.githubassets.com/images/icons/emoji/unicode/1f474.png?v8">👴</span></a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
 
         <h2 id="发布文章">
           <a href="#发布文章" class="heading-link"><i class="fas fa-link"></i></a>发布文章</h2>
       
-
         <h3 id="图片配置">
           <a href="#图片配置" class="heading-link"><i class="fas fa-link"></i></a>图片配置</h3>
-      
-<p>在根目录下配置文件_config.yml 中 <code>post_asset_folder: true</code><br>
-安装插件</p>
+      <p>在根目录下配置文件_config.yml 中 <code>post_asset_folder: true</code><br>安装插件 </p>
 <figure class="highlight shell"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install https://github.com/CodeFalling/hexo-asset-image -- save</span></span><br></pre></td></tr></tbody></table></div></figure>
-<p>利用 <code>hexo n "文章名称"</code> 在 <code>source\_posts</code>下生成一个新的文章时，同时也会生成一个文章名称的文件夹，把图片放在文章名称文件夹下，在 markdown 中利用图片时是需要加上文件夹的目录，但是上传至 github 时 并不需要文件夹的目录。<br>
-然后就利用 Oah 的脚本，轻松解决了这个问题。</p>
+<p>利用 <code>hexo n "文章名称"</code> 在 <code>source\_posts</code>下生成一个新的文章时，同时也会生成一个文章名称的文件夹，把图片放在文章名称文件夹下，在 markdown 中利用图片时是需要加上文件夹的目录，但是上传至 github 时 并不需要文件夹的目录。<br>然后就利用 Oah 的脚本，轻松解决了这个问题。</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -179,8 +148,9 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.1.1"></he
             });
             document.body.appendChild(img);
           });
-      </script></div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2020/08/16/%E5%88%9D%E8%AF%86Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">初识Java 反序列化</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2020/08/15/hello-world/"><span class="paginator-prev__text">Hello World</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">搭建博客</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">1.1.</span> <span class="toc-text">
-          环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Git-Node-js"><span class="toc-number">1.1.1.</span> <span class="toc-text">
+      </script></div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2020/08/16/%E5%88%9D%E8%AF%86Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">初识Java 反序列化</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2020/08/15/hello-world/"><span class="paginator-prev__text">Hello World</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2"><span class="toc-number">1.</span> <span class="toc-text">
+          搭建博客</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">1.1.</span> <span class="toc-text">
+          环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Git-amp-amp-Node-js"><span class="toc-number">1.1.1.</span> <span class="toc-text">
           安装 Git &amp;&amp; Node.js</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Hexo"><span class="toc-number">1.1.2.</span> <span class="toc-text">
           安装 Hexo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2%E6%96%87%E4%BB%B6"><span class="toc-number">1.1.3.</span> <span class="toc-text">
           生成静态博客文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%86%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0-Github-%E4%B8%8A"><span class="toc-number">1.2.</span> <span class="toc-text">
