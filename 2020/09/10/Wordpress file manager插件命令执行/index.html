@@ -30,8 +30,10 @@
 <meta property="og:image" content="http://yoursite.com/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200910095150.png">
 <meta property="og:image" content="http://yoursite.com/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200910101728.png">
 <meta property="og:image" content="http://yoursite.com/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200910095357.png">
+<meta property="og:image" content="http://yoursite.com/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200914104323.png">
+<meta property="og:image" content="http://yoursite.com/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200914104918.png">
 <meta property="article:published_time" content="2020-09-10T02:50:32.000Z">
-<meta property="article:modified_time" content="2020-09-14T02:41:57.109Z">
+<meta property="article:modified_time" content="2020-09-14T02:55:18.579Z">
 <meta property="article:author" content="whippet">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909144050.png"><title>Wordpress file manager插件命令执行 | Whippet's Blog</title><link ref="canonical" href="http://yoursite.com/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.1.1"><script>var Stun = window.Stun || {};
@@ -105,6 +107,10 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.1.1"></he
 <p><code>\elFinderVolumeDriver::putContents</code><br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200910095150.png"></p>
 <p><code>\elFinderVolumeDriver::decode</code><br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200910101728.png"><br>decode 函数 先将<code>$hash</code> 的值根据 <code>$this-&gt;id</code> 进行分割，然后替换字串并进行 base64 解码 然后拼接 所对应的 <code>$this-&gt;root</code>  最后会返回 $path 的值为<code>E:\Tools\phpstudy_pro\WWW\wordpress\wp-content\plugins\wp-file-manager\lib\files\test.php</code><br><code>\elFinderVolumeLocalFileSystem::_filePutContents</code><br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200910095357.png"></p>
 <p>成功将字符串写入文件中</p>
+<hr>
+<p>成功利用还可以直接利用 <code>upload</code> 方法，上传文件</p>
+<p><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200914104323.png"></p>
+<p><code>\elFinder::upload</code><br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200914104918.png"></p>
 
         <h2 id="参考文章">
           <a href="#参考文章" class="heading-link"><i class="fas fa-link"></i></a>参考文章</h2>
