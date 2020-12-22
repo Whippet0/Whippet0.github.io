@@ -49,7 +49,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/12/15/%E9%AA%91%E5%A3%ABcms%E5%AD%98%E5%9C%A8%E6%A8%A1%E6%9D%BF%E8%A7%A3%E6%9E%90%E6%BC%8F%E6%B4%9E/20201222160956.png">
 <meta property="og:image" content="http://yoursite.com/2020/12/15/%E9%AA%91%E5%A3%ABcms%E5%AD%98%E5%9C%A8%E6%A8%A1%E6%9D%BF%E8%A7%A3%E6%9E%90%E6%BC%8F%E6%B4%9E/20201222161122.png">
 <meta property="article:published_time" content="2020-12-15T02:27:32.000Z">
-<meta property="article:modified_time" content="2020-12-22T08:16:03.837Z">
+<meta property="article:modified_time" content="2020-12-22T08:22:57.931Z">
 <meta property="article:author" content="whippet">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/2020/12/15/%E9%AA%91%E5%A3%ABcms%E5%AD%98%E5%9C%A8%E6%A8%A1%E6%9D%BF%E8%A7%A3%E6%9E%90%E6%BC%8F%E6%B4%9E/20201215150155.png"><title>骑士cms存在模板解析漏洞 | Whippet's Blog</title><link ref="canonical" href="http://yoursite.com/2020/12/15/%E9%AA%91%E5%A3%ABcms%E5%AD%98%E5%9C%A8%E6%A8%A1%E6%9D%BF%E8%A7%A3%E6%9E%90%E6%BC%8F%E6%B4%9E/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.1.1"><script>var Stun = window.Stun || {};
@@ -88,7 +88,8 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.1.1"></he
 <p>最后发现在加载模块时会检测模块名，无法加载 Common 模块。Common 模块无法直接调用，所以我们需要找其他方法调用 Common 模块下的 Base 控制器中的assign_resume_tpl 方法。<br>我们注意到 Home 模块下的 IndexController 继承 FrontendController<br><img src="/2020/12/15/%E9%AA%91%E5%A3%ABcms%E5%AD%98%E5%9C%A8%E6%A8%A1%E6%9D%BF%E8%A7%A3%E6%9E%90%E6%BC%8F%E6%B4%9E/20201217131237.png"><br>FrontendController 继承 BaseController<br><img src="/2020/12/15/%E9%AA%91%E5%A3%ABcms%E5%AD%98%E5%9C%A8%E6%A8%A1%E6%9D%BF%E8%A7%A3%E6%9E%90%E6%BC%8F%E6%B4%9E/20201217131343.png"></p>
 <p>所以我们通过构造路由<br><code>http://74cms.test/index.php?m=home&amp;c=index&amp;a=assign_resume_tpl&amp;variable=1&amp;tpl=2</code><br><img src="/2020/12/15/%E9%AA%91%E5%A3%ABcms%E5%AD%98%E5%9C%A8%E6%A8%A1%E6%9D%BF%E8%A7%A3%E6%9E%90%E6%BC%8F%E6%B4%9E/20201217131553.png"></p>
 <hr>
-<p>在第一次进行调试分析时，在关键地方加上断点，死活都进入不到断点定位的位置，但是相关功能已经执行，然后我发现会跟进一个文件 <code>common~runtime.php</code> 这个文件中乱七八糟的，但是里面的内容又好像是代码，通过查阅资料发现<code>ThinkPHP的编译缓存文件~runtime.php</code><br><del>runtime.php 中缓存的编译内容，相当于把 index.php 引导的所有操作全部集成到 ~runtime.php 文件中。有了这个缓存的编译文件，index.php 在下次运行时，不再引导，而是直接检测是否存在 ~runtime.php 编译缓存文件，如果在，则直接运行 ~runtime.php。<br>我就将文件夹下的 common</del>runtime.php 删除，就实现了调试自由。</p>
+<p>在第一次进行调试分析时，在关键地方加上断点，死活都进入不到断点定位的位置，但是相关功能已经执行，然后我发现会跟进一个文件 <code>common~runtime.php</code> 这个文件中乱七八糟的，但是里面的内容又好像是代码，通过查阅资料发现<code>ThinkPHP的编译缓存文件~runtime.php</code><br>~runtime.php 中缓存的编译内容，相当于把 index.php 引导的所有操作全部集成到 ~runtime.php 文件中。有了这个缓存的编译文件，index.php 在下次运行时，不再引导，而是直接检测是否存在 ~runtime.php 编译缓存文件，如果在，则直接运行 ~runtime.php。     </p>
+<p>我就将文件夹下的 common~runtime.php 删除，就实现了调试自由。</p>
 <hr>
 
         <h3 id="通过包含日志实现命令执行">
