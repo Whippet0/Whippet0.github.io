@@ -1,9 +1,9 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/favicon-16x16.png?v=2.1.1" type="image/png" sizes="16x16"><link rel="icon" href="/images/favicon-32x32.png?v=2.1.1" type="image/png" sizes="32x32"><meta name="description" content="配置环境       phpstromphpstudy">
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/favicon-16x16.png?v=2.1.1" type="image/png" sizes="16x16"><link rel="icon" href="/images/favicon-32x32.png?v=2.1.1" type="image/png" sizes="32x32"><meta name="description" content="配置环境        phpstrom phpstudy">
 <meta property="og:type" content="article">
 <meta property="og:title" content="phpstorm进行PHP断点调试">
 <meta property="og:url" content="http://yoursite.com/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/index.html">
 <meta property="og:site_name" content="Whippet&#39;s Blog">
-<meta property="og:description" content="配置环境       phpstromphpstudy">
+<meta property="og:description" content="配置环境        phpstrom phpstudy">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://yoursite.com/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820161459.png">
 <meta property="og:image" content="http://yoursite.com/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820161639.png">
@@ -21,7 +21,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820175205.png">
 <meta property="og:image" content="http://yoursite.com/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200909105805.png">
 <meta property="article:published_time" content="2020-08-20T07:19:41.000Z">
-<meta property="article:modified_time" content="2021-03-09T16:02:38.854Z">
+<meta property="article:modified_time" content="2021-03-09T16:04:38.883Z">
 <meta property="article:author" content="whippet">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820161459.png"><title>phpstorm进行PHP断点调试 | Whippet's Blog</title><link ref="canonical" href="http://yoursite.com/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.1.1"><script>var Stun = window.Stun || {};
@@ -49,49 +49,68 @@ var CONFIG = {
 
 window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.1.1"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/friendship/"><span class="header-nav-menu-item__icon"><i class="fas fa-link"></i></span><span class="header-nav-menu-item__text">友链</span></a></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Whippet's Blog</div><div class="header-banner-info__subtitle"></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">phpstorm进行PHP断点调试</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2020-08-20</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-03-10</span></span></div></header><div class="post-body"><h2 id="配置环境">
           <a href="#配置环境" class="heading-link"><i class="fas fa-link"></i></a>配置环境</h2>
-      <p><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://www.jetbrains.com/zh-cn/phpstorm/promo/">phpstrom</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://www.xp.cn/download.html">phpstudy</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+      
+<p><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://www.jetbrains.com/zh-cn/phpstorm/promo/">phpstrom</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>
+<span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://www.xp.cn/download.html">phpstudy</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
 <a id="more"></a>
-
 
         <h2 id="phpstrom-配置-php-环境">
           <a href="#phpstrom-配置-php-环境" class="heading-link"><i class="fas fa-link"></i></a>phpstrom 配置 php 环境</h2>
-      <p><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820161459.png"></p>
-<p><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820161639.png"></p>
-<p><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820161752.png"></p>
-<p><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820161834.png"></p>
+      
+<p><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820161459.png" alt=""></p>
+<p><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820161639.png" alt=""></p>
+<p><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820161752.png" alt=""></p>
+<p><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820161834.png" alt=""></p>
 
         <h2 id="PHP安装xdebug扩展">
           <a href="#PHP安装xdebug扩展" class="heading-link"><i class="fas fa-link"></i></a>PHP安装xdebug扩展</h2>
-      <p>注意版本：此时我们 php 的版本为 php5.6.9<br><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://xdebug.org/">xdebug模块</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br><code>https://xdebug.org/files/php_xdebug-2.5.5-5.6-vc11-nts-x86_64.dll</code>  </p>
-<p>把下载成功的 <code>php_xdebug-2.5.5-5.6-vc11-nts-x86_64.dll</code><br>放在 <code>E:\Tools\phpstudy_pro\Extensions\php\php5.6.9nts\ext</code> 文件夹下</p>
+      
+<p>注意版本：此时我们 php 的版本为 php5.6.9<br>
+<span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://xdebug.org/">xdebug模块</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>
+<code>https://xdebug.org/files/php_xdebug-2.5.5-5.6-vc11-nts-x86_64.dll</code></p>
+<p>把下载成功的 <code>php_xdebug-2.5.5-5.6-vc11-nts-x86_64.dll</code><br>
+放在 <code>E:\Tools\phpstudy_pro\Extensions\php\php5.6.9nts\ext</code> 文件夹下</p>
 <p>同时在 <code>php.ini</code> 中添加如下配置</p>
 <figure class="highlight plain"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[xdebug]</span><br><span class="line">zend_extension="E:/Tools/phpstudy_pro/Extensions/php/php5.6.9nts/ext/php_xdebug-2.5.5-5.6-vc11-nts-x86_64.dll"　　;指定Xdebug扩展文件的绝对路径</span><br><span class="line">xdebug.auto_trace=on　　;启用代码自动跟踪</span><br><span class="line">xdebug.collect_params=on　　;允许收集传递给函数的参数变量</span><br><span class="line">xdebug.collect_return=on　　;允许收集函数调用的返回值</span><br><span class="line">xdebug.trace_output_dir="E:/Tools/phpstudy_pro/Extensions/php/tmp/xdebug"　　;指定堆栈跟踪文件的存放目录</span><br><span class="line">xdebug.profiler_enable=on　　;是否启用Xdebug的性能分析，并创建性能信息文件</span><br><span class="line">xdebug.profiler_output_dir="E:/Tools/phpstudy_pro/Extensions/php/tmp/xdebug"　　;指定性能分析信息文件的输出目录</span><br><span class="line">xdebug.remote_enable = on　　;是否开启远程调试</span><br><span class="line">xdebug.remote_handler = dbgp　　;指定远程调试的处理协议</span><br><span class="line">xdebug.remote_host= localhost　　;指定远程调试的主机名</span><br><span class="line">xdebug.remote_port = 9000　　;指定远程调试的端口号</span><br><span class="line">xdebug.idekey = PHPSTORM　　;指定传递给DBGp调试器处理程序的IDE Key</span><br></pre></td></tr></tbody></table></div></figure>
-<p><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820170342.png"></p>
+<p><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820170342.png" alt=""></p>
 
         <h2 id="PHPStrom-配置-debug-环境">
           <a href="#PHPStrom-配置-debug-环境" class="heading-link"><i class="fas fa-link"></i></a>PHPStrom 配置 debug 环境</h2>
-      <p>配置 Debug 端口<br><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820170653.png"></p>
-<p>配置IDEKEY<br><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820170916.png"></p>
-<p>配置Server<br><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820171138.png"></p>
-<p>配置PHP Web Application<br><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820171423.png"></p>
+      
+<p>配置 Debug 端口<br>
+<img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820170653.png" alt=""></p>
+<p>配置IDEKEY<br>
+<img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820170916.png" alt=""></p>
+<p>配置Server<br>
+<img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820171138.png" alt=""></p>
+<p>配置PHP Web Application<br>
+<img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820171423.png" alt=""></p>
 
         <h2 id="浏览器的xdebug插件">
           <a href="#浏览器的xdebug插件" class="heading-link"><i class="fas fa-link"></i></a>浏览器的xdebug插件</h2>
-      <p><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820173451.png"></p>
+      
+<p><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820173451.png" alt=""></p>
 
         <h2 id="测试调试">
           <a href="#测试调试" class="heading-link"><i class="fas fa-link"></i></a>测试调试</h2>
-      <p>加上断点，同时把小电话设置成为绿色的<br><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820174230.png"><br>浏览器上的插件打开，同时访问要调试的页面<br><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820174621.png"></p>
+      
+<p>加上断点，同时把小电话设置成为绿色的<br>
+<img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820174230.png" alt=""><br>
+浏览器上的插件打开，同时访问要调试的页面<br>
+<img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820174621.png" alt=""></p>
 
         <h2 id="调试单个文件">
           <a href="#调试单个文件" class="heading-link"><i class="fas fa-link"></i></a>调试单个文件</h2>
-      <p>调试单个文件时 配置PHP Web Application<br><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820175107.png"><br>点击绿色的小虫子就可以进行调试了<br><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820175205.png"></p>
+      
+<p>调试单个文件时 配置PHP Web Application<br>
+<img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820175107.png" alt=""><br>
+点击绿色的小虫子就可以进行调试了<br>
+<img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200820175205.png" alt=""></p>
 <p>就可以进行愉快的调式了！</p>
-<p>在进行调试时，经常遇到这个问题,xdebug断掉调试经常无故断开  </p>
+<p>在进行调试时，经常遇到这个问题,xdebug断掉调试经常无故断开</p>
 <p>如果针对某一个项目可以对项目的配置文件 <code>vhosts.conf</code> 中添加</p>
 <figure class="highlight plain"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">IPCConnectTimeout 3000</span><br><span class="line">IPCCommTimeout 3000</span><br></pre></td></tr></tbody></table></div></figure>
-
-<p><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200909105805.png"></p>
+<p><img src="/2020/08/20/phpstorm%E8%BF%9B%E8%A1%8CPHP%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/20200909105805.png" alt=""></p>
 <p>要对所有项目都进行配置时，可以修改httpd.conf</p>
 <script>
         document.querySelectorAll('.github-emoji')
